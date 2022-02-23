@@ -26,4 +26,7 @@ public class UserProfile {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    public UserProfile(UUID uuid, String location, String profilePicture, LocalDate dateOfBirth, String bio) {
+    }
 }

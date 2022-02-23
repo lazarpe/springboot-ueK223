@@ -7,6 +7,9 @@ import com.example.demo.domain.authority.AuthorityRepository;
 import com.example.demo.domain.role.Role;
 import com.example.demo.domain.role.RoleRepository;
 import com.example.demo.domain.role.RoleServiceImpl;
+import com.example.demo.domain.userProfile.UserProfile;
+import com.example.demo.domain.userProfile.UserProfileRepository;
+import com.example.demo.domain.userProfile.UserProfileService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +18,8 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -25,6 +27,8 @@ import java.util.Set;
 class AppStartupRunner implements ApplicationRunner {
     @Autowired
     private final UserService userService;
+    @Autowired
+    private final UserProfileService userProfileService;
     @Autowired
     private final RoleRepository roleRepository;
     @Autowired
@@ -44,7 +48,10 @@ class AppStartupRunner implements ApplicationRunner {
         roleRepository.save(default_role);
 
         User default_user = new User(null, "james","james.bond@mi6.com","bond", Set.of(default_role));
+        UserProfile userProfile = new UserProfile(UUID.randomUUID(), "Zurich", "", null, "Default bio");
+
         userService.saveUser(default_user);
+        userProfileService.saveUserProfile(userProfile);
 
         userService.addRoleToUser(default_user.getUsername(), default_role.getName());
     }
