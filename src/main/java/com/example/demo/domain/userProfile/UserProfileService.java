@@ -12,8 +12,8 @@ import java.util.UUID;
  **/
 public interface UserProfileService {
     UserProfile saveUserProfile(UserProfile userProfile) throws InstanceAlreadyExistsException;
-    Optional<UserProfile> getUserProfile(String uuid) throws InstanceNotFoundException;
+    Optional<UserProfile> getUserProfile(UUID uuid) throws InstanceNotFoundException;
     // validation if user even exists
-    void deleteById(String id) throws InstanceNotFoundException;
+    void deleteById(UUID id) throws InstanceNotFoundException;
     List<UserProfile> findAll();
 }

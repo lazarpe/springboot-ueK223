@@ -38,24 +38,19 @@ public class UserProfileServiceImpl implements UserProfileService {
      * @throws InstanceAlreadyExistsException
      */
     @Override
-    public UserProfile saveUserProfile(UserProfile userProfile) throws InstanceAlreadyExistsException {
-        /*if (userRepository.findByUsername(user.getUsername()) != null) {
-            userProfileRepository.save(new UserProfile());
-        } else {
-            throw new InstanceAlreadyExistsException("User already exists");
-        }*/
-        return null;
+    public UserProfile saveUserProfile(UserProfile userProfile) {
+        return userProfileRepository.save(userProfile);
     }
 
     @Override
-    public void deleteById(String id) throws InstanceNotFoundException {
-        userProfileRepository.deleteById(UUID.fromString(id));
+    public void deleteById(UUID id) throws InstanceNotFoundException {
+        userProfileRepository.deleteById(id);
     }
 
     //Currently can only get user profile through it's ID and not through user
     @Override
-    public Optional<UserProfile> getUserProfile(String uuid) {
-        return userProfileRepository.findById(UUID.fromString(uuid));
+    public Optional<UserProfile> getUserProfile(UUID uuid) {
+        return userProfileRepository.findById(uuid);
     }
 
     @Override
