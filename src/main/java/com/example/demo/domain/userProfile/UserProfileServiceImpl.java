@@ -42,6 +42,22 @@ public class UserProfileServiceImpl implements UserProfileService {
         return userProfileRepository.save(userProfile);
     }
 
+    //Response can be improved
+    @Override
+    public void updateUserProfile(UserProfile userProfile, UUID uuid) {
+            userProfileRepository.findById(uuid).map( foundUserProfile -> {
+             foundUserProfile.setLocation(userProfile.getLocation());
+             foundUserProfile.setBiography(userProfile.getBiography());
+             foundUserProfile.setProfilePictureURL(userProfile.getProfilePictureURL());
+             foundUserProfile.setDateOfBirth(userProfile.getDateOfBirth());
+             foundUserProfile.setUser(userProfile.getUser());
+             return userProfileRepository.save(foundUserProfile);
+            }).orElseGet(() -> {
+                userProfile.setId(uuid);
+                return userProfileRepository.save(userProfile);
+            });
+    }
+
     @Override
     public void deleteById(UUID id) throws InstanceNotFoundException {
         userProfileRepository.deleteById(id);

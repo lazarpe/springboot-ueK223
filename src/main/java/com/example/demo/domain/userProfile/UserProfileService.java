@@ -13,7 +13,7 @@ import java.util.UUID;
 public interface UserProfileService {
     UserProfile saveUserProfile(UserProfile userProfile) throws InstanceAlreadyExistsException;
     Optional<UserProfile> getUserProfile(UUID uuid) throws InstanceNotFoundException;
-    // validation if user even exists
+    void updateUserProfile(UserProfile userProfile, UUID uuid);
     void deleteById(UUID id) throws InstanceNotFoundException;
     List<UserProfile> findAll();
 }

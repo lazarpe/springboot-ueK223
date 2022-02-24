@@ -21,15 +21,15 @@ public class UserProfileController {
     @PostMapping("/")
     @ResponseBody
     public void saveUserProfile(@RequestBody UserProfile userProfile) {
-        ResponseEntity.ok().body("Profile Created");
         userProfileService.saveUserProfile(userProfile);
+        ResponseEntity.ok().body("Profile Created");
     }
 
     @DeleteMapping("/{id}")
     @ResponseBody
     public void deleteUserProfile(@PathVariable UUID id) throws InstanceNotFoundException {
-        ResponseEntity.ok().body("Profile Deleted");
         userProfileService.deleteById(id);
+        ResponseEntity.ok().body("Profile Deleted");
     }
 
     @GetMapping("/{id}")
@@ -47,15 +47,8 @@ public class UserProfileController {
     //Return Type not quite sure yet
     @PutMapping("/{id}")
     @ResponseBody
-    public UserProfile updateUserProfile(@RequestBody UserProfile userProfile, @PathVariable UUID id) {
-        return userProfileService.getUserProfile(id).map( foundUserProfile -> {
-            foundUserProfile.setUser(userProfile.getUser());
-            foundUserProfile.setBiography(userProfile.getBiography());
-            foundUserProfile.setLocation(userProfile.getLocation());
-            foundUserProfile.setDateOfBirth(userProfile.getDateOfBirth());
-            foundUserProfile.setId(userProfile.getId());
-            return userProfileService.saveUserProfile(userProfile);
-                }).orElseGet(() -> userProfileService.saveUserProfile(userProfile)
-                );
+    public void updateUserProfile(@RequestBody UserProfile userProfile, @PathVariable UUID id) {
+        userProfileService.updateUserProfile(userProfile, id);
+        ResponseEntity.ok().body("User profile updated");
     }
 }
