@@ -1,7 +1,7 @@
 package com.example.demo.domain.userProfile;
 
-import com.example.demo.domain.appUser.User;
 import com.example.demo.domain.appUser.UserRepository;
+import com.example.demo.domain.appUser.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,10 +21,15 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Transactional
 public class UserProfileServiceImpl implements UserProfileService {
+
     @Autowired
     private final UserProfileRepository userProfileRepository;
+
     @Autowired
     private final UserRepository userRepository;
+
+    @Autowired
+    private final UserServiceImpl userService;
 
     /**
      * Saves a userprofile only if the user exists. There can be no profile without a user (with account details)
@@ -43,17 +48,18 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     @Override
-    public UserProfile getUserProfile(String username) {
-        return null;
+    public void deleteById(String id) throws InstanceNotFoundException {
+        userProfileRepository.deleteById(UUID.fromString(id));
     }
 
+    //Currently can only get user profile through it's ID and not through user
     @Override
-    public Optional<UserProfile> findById(UUID id) throws InstanceNotFoundException {
-        return Optional.empty();
+    public Optional<UserProfile> getUserProfile(String uuid) {
+        return userProfileRepository.findById(UUID.fromString(uuid));
     }
 
     @Override
     public List<UserProfile> findAll() {
-        return null;
+        return userProfileRepository.findAll();
     }
 }

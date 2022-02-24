@@ -1,8 +1,5 @@
 package com.example.demo.domain.userProfile;
 
-import com.example.demo.domain.appUser.User;
-import com.example.demo.domain.role.Role;
-
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
 import java.util.List;
@@ -15,8 +12,8 @@ import java.util.UUID;
  **/
 public interface UserProfileService {
     UserProfile saveUserProfile(UserProfile userProfile) throws InstanceAlreadyExistsException;
-    UserProfile getUserProfile(String username);
+    Optional<UserProfile> getUserProfile(String uuid) throws InstanceNotFoundException;
     // validation if user even exists
-    Optional<UserProfile> findById(UUID id) throws InstanceNotFoundException;
+    void deleteById(String id) throws InstanceNotFoundException;
     List<UserProfile> findAll();
 }
