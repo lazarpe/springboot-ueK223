@@ -34,6 +34,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
                 .antMatchers("/**").hasRole("DEFAULT")
                 .antMatchers("/**").hasRole("ADMIN")
                 .and()
+                .csrf()
+                .disable()
                 // some more method calls
                 .formLogin();
     }
