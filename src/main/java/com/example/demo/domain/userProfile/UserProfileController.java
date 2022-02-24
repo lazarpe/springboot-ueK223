@@ -4,49 +4,48 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
 import java.util.Collection;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/user/userProfile")
+@RequestMapping("/api/profile")
 public class UserProfileController {
 
     @Autowired
     private UserProfileServiceImpl userProfileService;
 
-    // Create user profile  + Not functioning
-    @PostMapping("/create") /* Mapping must get changed */
+    @PostMapping("/")
     @ResponseBody
-    public ResponseEntity<String> saveUserProfile(){
-        return ResponseEntity.ok().body("Create not functioning");
+    public void saveUserProfile(@RequestBody UserProfile userProfile) throws InstanceAlreadyExistsException {
+        ResponseEntity.ok().body("Profile Created");
+        userProfileService.saveUserProfile(userProfile);
     }
 
-    // Delete user profile
-    @DeleteMapping("/delete/{id}") /* Mapping must get changed */
+    @DeleteMapping("/{id}")
     @ResponseBody
     public void deleteUserProfile(@PathVariable String id) throws InstanceNotFoundException {
+        ResponseEntity.ok().body("Profile Deleted");
         userProfileService.deleteById(id);
     }
 
-    // Get single user profile
-    @GetMapping("/get/{id}") /* Mapping must get changed */
+    @GetMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<Optional<UserProfile>> fetchUserProfiles(@PathVariable String id){
+    public ResponseEntity<Optional<UserProfile>> fetchUserProfiles(@PathVariable String id) {
         return new ResponseEntity<>(userProfileService.getUserProfile(id), HttpStatus.OK);
     }
 
-    // Get all user profile
-    @GetMapping("/getAll") /* Mapping must get changed */
+    @GetMapping("/")
     @ResponseBody
-    public ResponseEntity<Collection<UserProfile>> fetchAllUserProfiles(){
+    public ResponseEntity<Collection<UserProfile>> fetchAllUserProfiles() {
         return new ResponseEntity<Collection<UserProfile>>(userProfileService.findAll(), HttpStatus.OK);
     }
 
-    // Update user profile  + Not functioning
-    @PutMapping("/update/{id}/") /* Mapping must get changed */
+    @PutMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<String> updateUserProfile(){
+    public ResponseEntity<String> updateUserProfile() {
         return ResponseEntity.ok().body("Create not functioning");
     }
 }
