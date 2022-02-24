@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import javax.management.InstanceNotFoundException;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -24,8 +25,8 @@ public class UserProfileController {
     // Delete user profile
     @DeleteMapping("/delete/{id}") /* Mapping must get changed */
     @ResponseBody
-    public ResponseEntity<Void> deleteUserProfile(@PathVariable String id){
-        return new ResponseEntity<Void>()userProfileService.deleteById(id);, HttpStatus.OK);
+    public void deleteUserProfile(@PathVariable String id) throws InstanceNotFoundException {
+        userProfileService.deleteById(id);
     }
 
     // Get single user profile
