@@ -56,23 +56,22 @@ class AppStartupRunner implements ApplicationRunner {
         authorityRepository.save(delete_auth);
 
 //       Roles
-        Role default_role = new Role(null, "DEFAULT",Arrays.asList(read_auth, add_auth, update_auth, delete_auth));
+        Role default_role = new Role(null, "DEFAULT",Arrays.asList(read_auth));
         roleRepository.save(default_role);
 
-        Role admin_role = new Role(null, "ADMIN", Arrays.asList(readAll_auth, read_auth, add_auth, update_auth, delete_auth));
+        Role admin_role = new Role(null, "ADMIN", Arrays.asList(read_auth, add_auth, update_auth, delete_auth));
         roleRepository.save(admin_role);
 
         User default_user = new User(null, "james","james.bond@mi6.com","bond", Set.of(default_role));
         UserProfile userProfile = new UserProfile(UUID.randomUUID(), "Zurich", "", null, "Default bio");
         userService.saveUser(default_user);
         userProfileService.saveUserProfile(userProfile);
+        userService.addRoleToUser(default_user.getUsername(), default_role.getName());
 
         User admin_user = new User(null, "boss", "boss@email.com", "bosspw", Set.of(admin_role));
         UserProfile adminUserProfile = new UserProfile(UUID.randomUUID(), "Boss City", "", null, "I'm the boss");
         userService.saveUser(admin_user);
         userProfileService.saveUserProfile(adminUserProfile);
-
-        userService.addRoleToUser(default_user.getUsername(), default_role.getName());
         userService.addRoleToUser(admin_user.getUsername(), admin_role.getName());
     }
 }

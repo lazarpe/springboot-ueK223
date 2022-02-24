@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @RestController @RequestMapping("/api")
 @RequiredArgsConstructor
-public class    UserController {
+public class UserController {
 //    ADD YOUR ENDPOINT MAPPINGS HERE
 private final UserService userService;
 
