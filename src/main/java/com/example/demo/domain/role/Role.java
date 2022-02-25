@@ -3,6 +3,8 @@ package com.example.demo.domain.role;
 import com.example.demo.domain.appUser.User;
 import com.example.demo.domain.authority.Authority;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.UniqueElements;
 //import org.hibernate.validator.constraints.UniqueElements;
 import javax.persistence.*;

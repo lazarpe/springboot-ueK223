@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -57,15 +59,20 @@ class AppStartupRunner implements ApplicationRunner {
 
         Role admin_role = new Role(null, "ADMIN", Arrays.asList(read_auth, add_auth, update_auth, delete_auth));
         roleRepository.save(admin_role);
+
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
       
-        User default_user = new User("james","james.bond@mi6.com","bond", Set.of(default_role));
+        User default_user = new User(null, "james","james.bond@mi6.com",passwordEncoder.encode("bond"), Set.of(default_role));
+        UserProfile userProfile = new UserProfile(UUID.randomUUID(), "Zurich", "", null, "Default bio");
+      
         userService.saveUser(default_user);
         userService.addRoleById(default_user.getId(), default_role.getId());
 
         UserProfile testUserProfile = new UserProfile("French Street", "sadadsada.png", null, "Test bio but keep it up so let's gooo", default_user);
         userProfileService.saveUserProfile(testUserProfile);
 
-        User admin_user = new User("boss", "boss.lg@email.com", "bosspw", Set.of(admin_role));
+        User admin_user = new User(null, "boss", "boss@email.com", passwordEncoder.encode("bosspw"), Set.of(admin_role));
+        UserProfile adminUserProfile = new UserProfile(UUID.randomUUID(), "Boss City", "", null, "I'm the boss");
 
         userService.saveUser(admin_user);
         userService.addRoleById(admin_user.getId(), admin_role.getId());
