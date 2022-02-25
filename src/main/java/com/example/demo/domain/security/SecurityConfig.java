@@ -32,6 +32,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
         http.httpBasic().and()
                 .authorizeRequests()
                 .antMatchers("/**").hasRole("DEFAULT")
+                //            ^ this is the resource       ^ this is the role (for more roles you need .hasAnyRole(var args...))
                 .antMatchers("/**").hasRole("ADMIN")
                 .and()
                 .csrf()

@@ -50,7 +50,6 @@ public class UserProfileServiceImpl implements UserProfileService {
              foundUserProfile.setBiography(userProfile.getBiography());
              foundUserProfile.setProfilePictureURL(userProfile.getProfilePictureURL());
              foundUserProfile.setDateOfBirth(userProfile.getDateOfBirth());
-             foundUserProfile.setUser(userProfile.getUser());
              return userProfileRepository.save(foundUserProfile);
             }).orElseGet(() -> {
                 userProfile.setId(uuid);
