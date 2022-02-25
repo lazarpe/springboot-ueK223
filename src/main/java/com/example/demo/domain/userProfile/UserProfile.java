@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import javax.persistence.*;
+import javax.validation.constraints.Max;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -15,24 +16,19 @@ import java.util.UUID;
 public class UserProfile {
 
     @Id
-    @OneToOne
-    @MapsId
-    @JoinColumn(name="user_id")
-    //@Column(name="id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
     private UUID id;
 
     @Column(name="location")
     private String location;
 
+    //Regex could still be added
     @Column(name="profilePictureURL")
     private String profilePictureURL;
 
     @Column(name="dateOfBirth")
     private LocalDate dateOfBirth;
-
-    //Still going to decide on this
-    //@Transient
-    //private Integer age;
 
     @Column(name="biography")
     private String biography;

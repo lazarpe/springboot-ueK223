@@ -1,9 +1,11 @@
 package com.example.demo.domain.appUser;
 
 import com.example.demo.domain.role.Role;
-import com.example.demo.domain.userProfile.UserProfile;
 import lombok.*;
+
 import javax.persistence.*;
+import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;;
 import java.util.Set;
 import java.util.UUID;
 
@@ -14,15 +16,21 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="id", nullable = false)
+    @Column(name="id")
     private UUID id;
 
+    @NotNull
+    @Max(value=80)
     @Column(name="username", nullable = false, unique = true)
     private String username;
 
+    @Email
+    @NotNull
     @Column(name="email", nullable = false, unique = true)
     private String email;
 
+    @NotNull
+    @Min(value=4)
     @Column(name="password", nullable = false)
     private String password;
 
