@@ -6,19 +6,15 @@ import com.example.demo.domain.authority.Authority;
 import com.example.demo.domain.authority.AuthorityRepository;
 import com.example.demo.domain.role.Role;
 import com.example.demo.domain.role.RoleRepository;
-import com.example.demo.domain.role.RoleServiceImpl;
 import com.example.demo.domain.userProfile.UserProfile;
-import com.example.demo.domain.userProfile.UserProfileRepository;
 import com.example.demo.domain.userProfile.UserProfileService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.util.*;
 
 @Component
@@ -66,13 +62,13 @@ class AppStartupRunner implements ApplicationRunner {
         userService.saveUser(default_user);
         UserProfile testUserProfile = new UserProfile(null, "sadadsada.png", "French Street", null, "Test bio but keep it up so let's gooo", default_user);
         userProfileService.saveUserProfile(testUserProfile);
-        userService.addRoleToUser(default_user.getUsername(), default_role.getName());
+        userService.addRoleById(default_user.getId(), default_role.getId());
 
         User admin_user = new User(null, "boss", "boss@email.com", "bosspw", Set.of(admin_role));
         UserProfile adminUserProfile = new UserProfile(UUID.randomUUID(), "Boss City", "", null, "I'm the boss");
         userService.saveUser(admin_user);
         userProfileService.saveUserProfile(adminUserProfile);
-        userService.addRoleToUser(admin_user.getUsername(), admin_role.getName());
+        userService.addRoleById(admin_user.getId(), admin_role.getId());
     }
 }
 
