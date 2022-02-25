@@ -1,12 +1,9 @@
 package com.example.demo.domain.authority;
 
-import com.example.demo.domain.role.Role;
 import lombok.*;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Collection;
-import java.util.List;
+//import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Entity
@@ -25,5 +22,4 @@ public class Authority  {
     @NotNull
     @Column(name="name")
     private String name;
-
 }

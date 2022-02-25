@@ -1,7 +1,10 @@
 package com.example.demo.domain.appUser;
 
 import com.example.demo.domain.role.Role;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.Set;
@@ -18,8 +21,7 @@ public class User {
     private UUID id;
 
     @NotNull
-    @Max(value=80)
-    @Min(value=4)
+    @Size(min = 3, max = 80)
     @Column(name="username", nullable = false, unique = true)
     private String username;
 
@@ -29,7 +31,7 @@ public class User {
     private String email;
 
     @NotNull
-    @Min(value=4)
+    @Size(min=4)
     @Column(name="password", nullable = false)
     private String password;
 

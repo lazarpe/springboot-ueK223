@@ -70,7 +70,6 @@ class AppStartupRunner implements ApplicationRunner {
         UserProfile testUserProfile = new UserProfile("French Street", "sadadsada.png", null, "Test bio but keep it up so let's gooo", default_user);
         userProfileService.saveUserProfile(testUserProfile);
 
-
         User admin_user = new User("boss", "boss.lg@email.com", "bosspw", Set.of(admin_role));
 
         userService.saveUser(admin_user);

@@ -22,12 +22,15 @@ public class UserProfile {
     @Column(name="location")
     private String location;
 
-    //Regex could still be added
     @Column(name="profilePictureURL")
     private String profilePictureURL;
 
     @Column(name="dateOfBirth")
     private LocalDate dateOfBirth;
+
+    //Still going to decide on this
+    //@Transient
+    //private Integer age;
 
     @Column(name="biography")
     private String biography;
