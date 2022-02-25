@@ -31,6 +31,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic().and()
                 .authorizeRequests()
+                .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/**").hasRole("DEFAULT")
                 //            ^ this is the resource       ^ this is the role (for more roles you need .hasAnyRole(var args...))
                 .antMatchers("/**").hasRole("ADMIN")
