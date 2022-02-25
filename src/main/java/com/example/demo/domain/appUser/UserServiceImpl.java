@@ -71,14 +71,24 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void addRoleToUser(String username, String roleName) {
-        User user = userRepository.findByUsername(username);
-        Role role = roleRepository.findByName(roleName);
-        user.getRoles().add(role);
+    public User addRoleById(UUID id, UUID roleId) throws InstanceNotFoundException {
+        if (findById(id).isEmpty()) {
+            throw new NoSuchElementException("User is null");
+        }
+        if (!roleRepository.existsById(roleId)) {
+            throw new InstanceNotFoundException("Role not found");
+        }
+        if (roleRepository.findById(roleId).isEmpty()) {
+            throw new NoSuchElementException("Role is null");
+        }
+        User user = findById(id).get();
+        Set<Role> roles = user.getRoles();
+        roles.add(roleRepository.findById(roleId).get());
+        return user;
     }
 
     @Override
-    public User getUser(String username) {
+    public User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
     @Override
@@ -96,7 +106,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepository.findAll();
     }
 
-
+    @Override
+    public void deleteById(UUID id) {
+        userRepository.deleteById(id);
+    }
 
 
 }

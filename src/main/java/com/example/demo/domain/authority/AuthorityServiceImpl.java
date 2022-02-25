@@ -46,8 +46,9 @@ public class AuthorityServiceImpl implements AuthorityService {
   }
 
   @Override
-  public void updateNameByName(String name, String newName) {
+  public Authority updateNameByName(String name, String newName) {
     authorityRepository.updateNameByName(name, newName);
+    return authorityRepository.findByName(newName);
   }
 
   @Override
