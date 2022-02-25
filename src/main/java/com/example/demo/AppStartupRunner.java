@@ -60,7 +60,7 @@ class AppStartupRunner implements ApplicationRunner {
       
         User default_user = new User("james","james.bond@mi6.com","bond", Set.of(default_role));
         userService.saveUser(default_user);
-        userService.addRoleToUser(default_user.getUsername(), default_role.getName());
+        userService.addRoleById(default_user.getId(), default_role.getId());
 
         UserProfile testUserProfile = new UserProfile("French Street", "sadadsada.png", null, "Test bio but keep it up so let's gooo", default_user);
         userProfileService.saveUserProfile(testUserProfile);
@@ -68,6 +68,6 @@ class AppStartupRunner implements ApplicationRunner {
         User admin_user = new User("boss", "boss.lg@email.com", "bosspw", Set.of(admin_role));
 
         userService.saveUser(admin_user);
-        userService.addRoleToUser(admin_user.getUsername(), admin_role.getName());
+        userService.addRoleById(admin_user.getId(), admin_role.getId());
     }
 }
