@@ -6,9 +6,7 @@ import com.example.demo.domain.authority.Authority;
 import com.example.demo.domain.authority.AuthorityRepository;
 import com.example.demo.domain.role.Role;
 import com.example.demo.domain.role.RoleRepository;
-import com.example.demo.domain.role.RoleServiceImpl;
 import com.example.demo.domain.userProfile.UserProfile;
-import com.example.demo.domain.userProfile.UserProfileRepository;
 import com.example.demo.domain.userProfile.UserProfileService;
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.util.*;
 
 @Component
@@ -64,17 +61,20 @@ class AppStartupRunner implements ApplicationRunner {
         roleRepository.save(admin_role);
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+      
         User default_user = new User(null, "james","james.bond@mi6.com",passwordEncoder.encode("bond"), Set.of(default_role));
         UserProfile userProfile = new UserProfile(UUID.randomUUID(), "Zurich", "", null, "Default bio");
+      
         userService.saveUser(default_user);
-        userProfileService.saveUserProfile(userProfile);
-        userService.addRoleToUser(default_user.getUsername(), default_role.getName());
+        userService.addRoleById(default_user.getId(), default_role.getId());
+
+        UserProfile testUserProfile = new UserProfile("French Street", "sadadsada.png", null, "Test bio but keep it up so let's gooo", default_user);
+        userProfileService.saveUserProfile(testUserProfile);
 
         User admin_user = new User(null, "boss", "boss@email.com", passwordEncoder.encode("bosspw"), Set.of(admin_role));
         UserProfile adminUserProfile = new UserProfile(UUID.randomUUID(), "Boss City", "", null, "I'm the boss");
+
         userService.saveUser(admin_user);
-        userProfileService.saveUserProfile(adminUserProfile);
-        userService.addRoleToUser(admin_user.getUsername(), admin_role.getName());
+        userService.addRoleById(admin_user.getId(), admin_role.getId());
     }
 }
-
