@@ -2,10 +2,8 @@ package com.example.demo.domain.appUser;
 
 import com.example.demo.domain.role.Role;
 import lombok.*;
-
 import javax.persistence.*;
 import javax.validation.constraints.*;
-import javax.validation.constraints.NotNull;;
 import java.util.Set;
 import java.util.UUID;
 
@@ -21,6 +19,7 @@ public class User {
 
     @NotNull
     @Max(value=80)
+    @Min(value=4)
     @Column(name="username", nullable = false, unique = true)
     private String username;
 

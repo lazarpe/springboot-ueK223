@@ -3,8 +3,10 @@ package com.example.demo.domain.role;
 import com.example.demo.domain.appUser.User;
 import com.example.demo.domain.authority.Authority;
 import lombok.*;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -16,12 +18,18 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Role {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
     private UUID id;
-    @Column(nullable = false)
+
+    @NotNull
+    @Column(name="name", nullable = false, unique = true)
     private String name;
 
+    @Column(name="authorities")
+    @UniqueElements
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             joinColumns = @JoinColumn(
@@ -34,6 +42,4 @@ public class Role {
     public String toString() {
         return getName();
     }
-
-
 }
