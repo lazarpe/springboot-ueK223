@@ -33,7 +33,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
                 .authorizeRequests()
                 .antMatchers("/**").hasRole("DEFAULT")
                 .antMatchers("/**").hasRole("ADMIN")
-                .and()
+                .and().csrf().disable()
                 // some more method calls
                 .formLogin();
     }
