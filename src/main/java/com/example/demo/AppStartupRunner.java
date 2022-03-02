@@ -6,10 +6,9 @@ import com.example.demo.domain.authority.Authority;
 import com.example.demo.domain.authority.AuthorityRepository;
 import com.example.demo.domain.role.Role;
 import com.example.demo.domain.role.RoleRepository;
-import com.example.demo.domain.userprofile.UserProfile;
-import com.example.demo.domain.userprofile.UserProfileService;
+import com.example.demo.domain.userProfile.UserProfile;
+import com.example.demo.domain.userProfile.UserProfileService;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -53,12 +52,13 @@ class AppStartupRunner implements ApplicationRunner {
         Authority deleteAuth = new Authority(null, "DELETE");
         authorityRepository.save(deleteAuth);
 
+
 //       Roles
         Role defaultRole = new Role(null, "DEFAULT", List.of(readAuth));
         roleRepository.save(defaultRole);
 
-        Role admin_role = new Role(null, "ADMIN", Arrays.asList(read_auth, add_auth, update_auth, delete_auth));
-        roleRepository.save(admin_role);
+        Role adminRole = new Role(null, "ADMIN", Arrays.asList(readAllAuth, readAuth, updateAuth, deleteAuth, addAuth));
+        roleRepository.save(adminRole);
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
       
@@ -76,10 +76,10 @@ class AppStartupRunner implements ApplicationRunner {
         //Admin
         User adminUser = new User(null, "boss", "boss@email.com", passwordEncoder.encode("bosspw"), Set.of(adminRole));
       
-        userService.saveUser(admin_user);
-        userService.addRoleById(admin_user.getId(), admin_role.getId());
+        userService.saveUser(adminUser);
+        userService.addRoleById(adminUser.getId(), adminRole.getId());
 
-        UserProfile adminUserProfile = new UserProfile("Boss ave", "boss-baby.png", null, "Who is the boss ?", admin_user);
+        UserProfile adminUserProfile = new UserProfile("Boss ave", "boss-baby.png", null, "Who is the boss ?", adminUser);
         userProfileService.saveUserProfile(adminUserProfile);
     }
 }

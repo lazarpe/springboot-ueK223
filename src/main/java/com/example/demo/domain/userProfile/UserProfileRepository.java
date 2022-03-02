@@ -1,4 +1,4 @@
-package com.example.demo.domain.userprofile;
+package com.example.demo.domain.userProfile;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

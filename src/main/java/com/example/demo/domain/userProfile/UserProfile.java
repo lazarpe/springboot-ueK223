@@ -1,4 +1,4 @@
-package com.example.demo.domain.userprofile;
+package com.example.demo.domain.userProfile;
 
 import com.example.demo.domain.user.User;
 import lombok.AllArgsConstructor;

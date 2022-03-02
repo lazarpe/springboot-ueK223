@@ -1,8 +1,8 @@
-package com.example.demo.domain.userprofile;
+package com.example.demo.domain.userProfile;
 
-import com.example.demo.domain.appUser.User;
-import com.example.demo.domain.appUser.UserRepository;
-import com.example.demo.domain.appUser.UserServiceImpl;
+import com.example.demo.domain.user.User;
+import com.example.demo.domain.user.UserRepository;
+import com.example.demo.domain.user.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +11,6 @@ import javax.management.InstanceNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor

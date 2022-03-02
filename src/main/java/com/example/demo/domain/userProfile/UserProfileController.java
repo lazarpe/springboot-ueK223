@@ -1,4 +1,4 @@
-package com.example.demo.domain.userprofile;
+package com.example.demo.domain.userProfile;
 
 import io.swagger.v3.oas.annotations.Operation;
 //import com.example.demo.domain.appUser.UserMapper;
