@@ -12,7 +12,7 @@ import java.util.UUID;
 public interface UserService {
     User saveUser(User user) throws InstanceAlreadyExistsException;
     User addRoleById(UUID id, UUID roleId) throws InstanceNotFoundException;
-    PublicUserDTO findByUsername(String username);
+    User findByUsername(String username);
     Optional<User> findById(UUID id) throws InstanceNotFoundException;
     List<User> findAll();
     void deleteById(UUID id);

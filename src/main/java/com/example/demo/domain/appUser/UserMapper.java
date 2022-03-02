@@ -1,4 +1,5 @@
 package com.example.demo.domain.appUser;
+import com.example.demo.domain.appUser.dto.PrivateUserDTO;
 import com.example.demo.domain.appUser.dto.PublicUserDTO;
 import org.mapstruct.Mapper;
 
@@ -10,4 +11,6 @@ import org.mapstruct.Mapper;
 public interface UserMapper {
     PublicUserDTO convertUserToPublicUserDTO(User user);
     User convertPublicUserDTOToUser(PublicUserDTO dto);
+    PrivateUserDTO convertUserToPrivateUserDTO(User user);
+    User convertPrivateUserDTOToUser(PrivateUserDTO dto);
 }

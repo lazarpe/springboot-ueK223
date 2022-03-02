@@ -26,9 +26,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Autowired
     private final RoleRepository roleRepository;
 
-    private final UserMapper userMapper;
-
-
     @Override
 //    This method is used for security authentication, use caution when changing this
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -91,8 +88,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public PublicUserDTO findByUsername(String username) {
-        return userMapper.convertUserToPublicUserDTO(userRepository.findByUsername(username));
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
     @Override
