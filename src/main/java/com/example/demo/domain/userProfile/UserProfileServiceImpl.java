@@ -1,11 +1,11 @@
 package com.example.demo.domain.userprofile;
 
-import com.example.demo.domain.user.UserRepository;
-import com.example.demo.domain.user.UserServiceImpl;
+import com.example.demo.domain.appUser.User;
+import com.example.demo.domain.appUser.UserRepository;
+import com.example.demo.domain.appUser.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
 import javax.transaction.Transactional;
@@ -13,10 +13,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-/**
- * Created by lazar on 2/23/2022.
- * Project name: demo
- **/
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -42,31 +38,51 @@ public class UserProfileServiceImpl implements UserProfileService {
         return userProfileRepository.save(userProfile);
     }
 
-    //Response can be improved
+    /**
+     *
+     * @param userProfile
+     * @param
+     */
     @Override
-    public void updateUserProfile(UserProfile userProfile, UUID uuid) {
-            userProfileRepository.findById(uuid).map( foundUserProfile -> {
+    public void updateUserProfile(UserProfile userProfile, String username) {
+        User foundUser = userService.findByUsername(username);
+            userProfileRepository.findByUserId(foundUser.getId()).map( foundUserProfile -> {
              foundUserProfile.setLocation(userProfile.getLocation());
              foundUserProfile.setBiography(userProfile.getBiography());
              foundUserProfile.setProfilePictureURL(userProfile.getProfilePictureURL());
              foundUserProfile.setDateOfBirth(userProfile.getDateOfBirth());
              return userProfileRepository.save(foundUserProfile);
             }).orElseGet(() -> {
-                userProfile.setId(uuid);
+                userProfile.setUser(foundUser);
                 return userProfileRepository.save(userProfile);
             });
     }
 
+
+    /**
+     *
+     * @param username
+     * @throws InstanceNotFoundException
+     */
     @Override
-    public void deleteById(UUID id) throws InstanceNotFoundException {
-        userProfileRepository.deleteById(id);
+    public void deleteById(String username) throws InstanceNotFoundException {
+        User foundUser = userService.findByUsername(username);
+        userProfileRepository.deleteById(userProfileRepository.findByUserId(foundUser.getId()).get().getId());
     }
 
+
     //Currently can only get user profile through it's ID and not through user
+    /**
+     *
+     * @param username
+     * @return
+     */
     @Override
-    public Optional<UserProfile> getUserProfile(UUID uuid) {
-        return userProfileRepository.findById(uuid);
+    public Optional<UserProfile> getUserProfile(String username) {
+        User foundUser = userService.findByUsername(username);
+        return userProfileRepository.findByUserId(foundUser.getId());
     }
+
 
     @Override
     public List<UserProfile> findAll() {

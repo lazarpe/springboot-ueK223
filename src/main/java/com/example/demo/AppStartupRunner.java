@@ -57,11 +57,13 @@ class AppStartupRunner implements ApplicationRunner {
         Role defaultRole = new Role(null, "DEFAULT", List.of(readAuth));
         roleRepository.save(defaultRole);
 
-        Role adminRole = new Role(null, "ADMIN", Arrays.asList(readAuth, addAuth, updateAuth, deleteAuth));
-        roleRepository.save(adminRole);
+        Role admin_role = new Role(null, "ADMIN", Arrays.asList(read_auth, add_auth, update_auth, delete_auth));
+        roleRepository.save(admin_role);
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
       
+      
+        //Test User
         User defaultUser = new User(null, "james","james.bond@mi6.com",passwordEncoder.encode("bond"), Set.of(defaultRole));
       
         userService.saveUser(defaultUser);
@@ -70,9 +72,14 @@ class AppStartupRunner implements ApplicationRunner {
         UserProfile testUserProfile = new UserProfile("French Street", "sadadsada.png", null, "Test bio but keep it up so let's gooo", defaultUser);
         userProfileService.saveUserProfile(testUserProfile);
 
+      
+        //Admin
         User adminUser = new User(null, "boss", "boss@email.com", passwordEncoder.encode("bosspw"), Set.of(adminRole));
+      
+        userService.saveUser(admin_user);
+        userService.addRoleById(admin_user.getId(), admin_role.getId());
 
-        userService.saveUser(adminUser);
-        userService.addRoleById(adminUser.getId(), adminRole.getId());
+        UserProfile adminUserProfile = new UserProfile("Boss ave", "boss-baby.png", null, "Who is the boss ?", admin_user);
+        userProfileService.saveUserProfile(adminUserProfile);
     }
 }
