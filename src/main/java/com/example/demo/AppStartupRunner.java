@@ -62,7 +62,6 @@ class AppStartupRunner implements ApplicationRunner {
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
       
-      
         //Test User
         User defaultUser = new User(null, "james","james.bond@mi6.com",passwordEncoder.encode("bond"), Set.of(defaultRole));
       
@@ -72,12 +71,12 @@ class AppStartupRunner implements ApplicationRunner {
         UserProfile testUserProfile = new UserProfile("French Street", "sadadsada.png", null, "Test bio but keep it up so let's gooo", defaultUser);
         userProfileService.saveUserProfile(testUserProfile);
 
-      
         //Admin
         User adminUser = new User(null, "boss", "boss@email.com", passwordEncoder.encode("bosspw"), Set.of(adminRole));
       
         userService.saveUser(adminUser);
         userService.addRoleById(adminUser.getId(), adminRole.getId());
+        userService.addRoleById(adminUser.getId(), defaultRole.getId());
 
         UserProfile adminUserProfile = new UserProfile("Boss ave", "boss-baby.png", null, "Who is the boss ?", adminUser);
         userProfileService.saveUserProfile(adminUserProfile);
