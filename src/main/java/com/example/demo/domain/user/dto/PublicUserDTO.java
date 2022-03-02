@@ -1,18 +1,13 @@
 package com.example.demo.domain.user.dto;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import javax.persistence.Column;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-/**
- * Created by lazar on 3/2/2022.
- * Project name: demo
- **/
 @Getter
 @Setter
 @AllArgsConstructor

@@ -1,6 +1,4 @@
 package com.example.demo.domain.user;
-
-
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
 import java.util.List;

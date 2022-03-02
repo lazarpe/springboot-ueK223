@@ -19,10 +19,13 @@ public class AuthorityController {
 
   private final AuthorityService authorityService;
 
-  @PostMapping("")
-  public ResponseEntity<?> save(@RequestBody Authority authority) {
+  private final ResponseEntity<Object> authorityNotFound = new ResponseEntity<>("authority not found", HttpStatus.NOT_FOUND);
+  private final ResponseEntity<Object> authorityIsNull = new ResponseEntity<>("authority is null", HttpStatus.NOT_FOUND);
+
+  @PostMapping("/name/{name}")
+  public ResponseEntity<Object> save(@PathVariable String name) {
     try {
-      return new ResponseEntity<>(authorityService.save(authority), HttpStatus.CREATED);
+      return new ResponseEntity<>(authorityService.save(new Authority(null, name)), HttpStatus.CREATED);
     } catch (InstanceAlreadyExistsException e) {
       return new ResponseEntity<>("authority already exists", HttpStatus.CONFLICT);
     }
@@ -34,32 +37,45 @@ public class AuthorityController {
   }
 
   @GetMapping("/id/{id}")
-  public ResponseEntity<?> findById(@PathVariable UUID id) {
+  public ResponseEntity<Object> findById(@PathVariable UUID id) {
     try {
       Optional<Authority> authority = authorityService.findById(id);
-      return new ResponseEntity<>(authority.orElse(null), HttpStatus.OK);
+      if (authority.isEmpty()) {
+        return authorityIsNull;
+      }
+      return new ResponseEntity<>(authority.get(), HttpStatus.OK);
     } catch (InstanceNotFoundException e) {
-      return new ResponseEntity<>("authority not found", HttpStatus.NOT_FOUND);
+      return authorityNotFound;
     }
   }
 
   @GetMapping("/name/{name}")
-  public Authority findByName(@PathVariable String name) {
-    return authorityService.findByName(name);
+  public ResponseEntity<Object> findByName(@PathVariable String name) {
+    if (authorityService.findByName(name) != null) {
+      return new ResponseEntity<>(authorityService.findByName(name), HttpStatus.OK);
+    } else {
+      return authorityIsNull;
+    }
   }
 
   @PutMapping("/name/{name}/{newName}")
-  public Authority updateNameByName(@PathVariable String name, @PathVariable String newName) {
-    return authorityService.updateNameByName(name, newName);
+  public ResponseEntity<Object> updateNameByName(@PathVariable String name, @PathVariable String newName) {
+    try {
+      return new ResponseEntity<>(authorityService.updateNameByName(name, newName), HttpStatus.OK);
+    } catch (InstanceNotFoundException e) {
+      return authorityNotFound;
+    } catch (InstanceAlreadyExistsException e) {
+      return new ResponseEntity<>("authority with this name already exists", HttpStatus.CONFLICT);
+    }
   }
 
   @DeleteMapping("/id/{id}")
-  public ResponseEntity<?> deleteById(@PathVariable UUID id) {
+  public ResponseEntity<Object> deleteById(@PathVariable UUID id) {
     try {
       authorityService.deleteById(id);
       return new ResponseEntity<>("authority deleted", HttpStatus.OK);
     } catch (EmptyResultDataAccessException e) {
-      return new ResponseEntity<>("authority not found", HttpStatus.NOT_FOUND);
+      return authorityNotFound;
     }
   }
 }

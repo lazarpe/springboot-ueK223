@@ -1,6 +1,4 @@
 package com.example.demo.domain.user;
-
-
 import com.example.demo.domain.user.dto.PrivateUserDTO;
 import com.example.demo.domain.role.RoleService;
 import lombok.RequiredArgsConstructor;
@@ -52,18 +50,18 @@ public class UserController {
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<?> findById(@PathVariable UUID id) {
+    public ResponseEntity<Object> findById(@PathVariable UUID id) {
         try {
             return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
-        } catch (InstanceNotFoundException e) {     
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        } catch (InstanceNotFoundException e) {
+            return new ResponseEntity<>("user not found", HttpStatus.NOT_FOUND);
         }
     }
 
     @PutMapping("/id/{id}/role/id/{roleId}")
-    public ResponseEntity<?> addRoleById(@PathVariable UUID id, @PathVariable UUID roleId) {
+    public ResponseEntity<Object> addRoleById(@PathVariable UUID id, @PathVariable UUID roleId) {
         try {
-            return new ResponseEntity<>(userService.addRoleById(id, roleId), HttpStatus.CREATED);
+            return new ResponseEntity<>(userService.addRoleById(id, roleId), HttpStatus.OK);
         } catch (InstanceNotFoundException e) {
             return new ResponseEntity<>("user or role not found", HttpStatus.NOT_FOUND);
         } catch (NoSuchElementException e) {
@@ -72,7 +70,7 @@ public class UserController {
     }
 
     @DeleteMapping("/id/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable UUID id) {
+    public ResponseEntity<String> deleteById(@PathVariable UUID id) {
         try {
             userService.deleteById(id);
             return new ResponseEntity<>("user deleted", HttpStatus.OK);

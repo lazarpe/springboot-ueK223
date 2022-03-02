@@ -14,6 +14,6 @@ public interface AuthorityService {
   Authority findByName(String name);
   Optional<Authority> findById(UUID id) throws InstanceNotFoundException;
   List<Authority> findAll();
-  Authority updateNameByName(String name, String newName);
+  Authority updateNameByName(String name, String newName) throws InstanceNotFoundException, InstanceAlreadyExistsException;
   void deleteById(UUID id);
 }

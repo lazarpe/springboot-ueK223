@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Entity(name="userProfile")
+@Entity(name="userprofile")
 @Getter@Setter
 @NoArgsConstructor @AllArgsConstructor
 public class UserProfile {

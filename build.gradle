@@ -26,11 +26,10 @@ dependencies {
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-	compileOnly("org.springframework.boot:spring-boot-devtools")
+	compileOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springdoc:springdoc-openapi-ui:1.6.6'
-	implementation 'org.modelmapper:modelmapper:2.4.4'
 	implementation "org.mapstruct:mapstruct:1.4.2.Final"
 	compileOnly "org.mapstruct:mapstruct-processor:1.4.2.Final"
 	annotationProcessor "org.mapstruct:mapstruct-processor:1.4.2.Final"

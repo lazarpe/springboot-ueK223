@@ -10,16 +10,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
 import javax.transaction.Transactional;
-
 import java.util.*;
 
 @Service @RequiredArgsConstructor @Transactional
 public class UserServiceImpl implements UserService, UserDetailsService {
-
     @Autowired
     private final UserRepository userRepository;
     @Autowired
@@ -87,9 +84,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
+    public User findByUsername(String username) { return userRepository.findByUsername(username); }
 
     @Override
     public Optional<User> findById(UUID id) throws InstanceNotFoundException {
