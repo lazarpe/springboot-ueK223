@@ -1,41 +1,24 @@
 package com.example.demo.domain.appUser;
 
 import com.example.demo.domain.role.Role;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
 import javax.persistence.*;
-import javax.validation.constraints.*;
 import java.util.Set;
 import java.util.UUID;
 
 @Entity(name="users")
+//from lombok
 @Getter@Setter
 @NoArgsConstructor @AllArgsConstructor
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="id")
     private UUID id;
-
-    @NotNull
-    @Size(min = 3, max = 80)
-    @Column(name="username", nullable = false, unique = true)
     private String username;
-
-    @Email
-    @NotNull
-    @Column(name="email", nullable = false, unique = true)
     private String email;
-
-    @NotNull
-    @Size(min=4)
-    @Column(name="password", nullable = false)
     private String password;
 
-    @Column(name="roles")
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
@@ -44,11 +27,4 @@ public class User {
             inverseJoinColumns = @JoinColumn(
                     name = "role_id", referencedColumnName = "id"))
     private Set<Role> roles;
-
-    public User(String username, String email, String password, Set<Role> roles) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.roles = roles;
-    }
 }
