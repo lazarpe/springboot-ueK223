@@ -1,6 +1,7 @@
 package com.example.demo.domain.appUser;
 
 
+import com.example.demo.domain.appUser.dto.PublicUserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -30,8 +31,8 @@ private final UserService userService;
     }
 
     @GetMapping("/username/{username}")
-    public User findByUsername(String username) {
-        return userService.findByUsername(username);
+    public ResponseEntity<PublicUserDTO> findByUsername(@PathVariable String username) {
+        return new ResponseEntity<>(userService.findByUsername(username), HttpStatus.OK);
     }
 
     @GetMapping("/id/{id}")

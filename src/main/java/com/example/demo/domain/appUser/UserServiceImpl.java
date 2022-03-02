@@ -1,5 +1,6 @@
 package com.example.demo.domain.appUser;
 
+import com.example.demo.domain.appUser.dto.PublicUserDTO;
 import com.example.demo.domain.role.Role;
 import com.example.demo.domain.role.RoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
     @Autowired
     private final RoleRepository roleRepository;
+
+    private final UserMapper userMapper;
 
 
     @Override
@@ -88,8 +91,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public PublicUserDTO findByUsername(String username) {
+        return userMapper.convertUserToPublicUserDTO(userRepository.findByUsername(username));
     }
 
     @Override
