@@ -19,6 +19,9 @@ public class AuthorityController {
 
   private final AuthorityService authorityService;
 
+  private final ResponseEntity<Object> authorityNotFound = new ResponseEntity<>("authority not found", HttpStatus.NOT_FOUND);
+  private final ResponseEntity<Object> authorityIsNull = new ResponseEntity<>("authority is null", HttpStatus.NOT_FOUND);
+
   @PostMapping("/name/{name}")
   public ResponseEntity<Object> save(@PathVariable String name) {
     try {
@@ -38,31 +41,41 @@ public class AuthorityController {
     try {
       Optional<Authority> authority = authorityService.findById(id);
       if (authority.isEmpty()) {
-        return new ResponseEntity<>("authority is null", HttpStatus.NOT_FOUND);
+        return authorityIsNull;
       }
       return new ResponseEntity<>(authority.get(), HttpStatus.OK);
     } catch (InstanceNotFoundException e) {
-      return new ResponseEntity<>("authority not found", HttpStatus.NOT_FOUND);
+      return authorityNotFound;
     }
   }
 
   @GetMapping("/name/{name}")
-  public Authority findByName(@PathVariable String name) {
-    return authorityService.findByName(name);
+  public ResponseEntity<Object> findByName(@PathVariable String name) {
+    if (authorityService.findByName(name) != null) {
+      return new ResponseEntity<>(authorityService.findByName(name), HttpStatus.OK);
+    } else {
+      return authorityIsNull;
+    }
   }
 
   @PutMapping("/name/{name}/{newName}")
-  public Authority updateNameByName(@PathVariable String name, @PathVariable String newName) {
-    return authorityService.updateNameByName(name, newName);
+  public ResponseEntity<Object> updateNameByName(@PathVariable String name, @PathVariable String newName) {
+    try {
+      return new ResponseEntity<>(authorityService.updateNameByName(name, newName), HttpStatus.OK);
+    } catch (InstanceNotFoundException e) {
+      return authorityNotFound;
+    } catch (InstanceAlreadyExistsException e) {
+      return new ResponseEntity<>("authority with this name already exists", HttpStatus.CONFLICT);
+    }
   }
 
   @DeleteMapping("/id/{id}")
-  public ResponseEntity<String> deleteById(@PathVariable UUID id) {
+  public ResponseEntity<Object> deleteById(@PathVariable UUID id) {
     try {
       authorityService.deleteById(id);
       return new ResponseEntity<>("authority deleted", HttpStatus.OK);
     } catch (EmptyResultDataAccessException e) {
-      return new ResponseEntity<>("authority not found", HttpStatus.NOT_FOUND);
+      return authorityNotFound;
     }
   }
 }
