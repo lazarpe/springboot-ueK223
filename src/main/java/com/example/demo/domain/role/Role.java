@@ -1,6 +1,5 @@
 package com.example.demo.domain.role;
 
-import com.example.demo.domain.appUser.User;
 import com.example.demo.domain.authority.Authority;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;

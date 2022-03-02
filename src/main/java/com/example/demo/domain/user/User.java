@@ -1,4 +1,4 @@
-package com.example.demo.domain.appUser;
+package com.example.demo.domain.user;
 
 import com.example.demo.domain.role.Role;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,5 @@
-package com.example.demo.domain.appUser;
+package com.example.demo.domain.user;
 
-import com.example.demo.domain.appUser.dto.PublicUserDTO;
 import com.example.demo.domain.role.Role;
 import com.example.demo.domain.role.RoleRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
-package com.example.demo.domain.appUser;
-import com.example.demo.domain.appUser.dto.PrivateUserDTO;
-import com.example.demo.domain.appUser.dto.PublicUserDTO;
+package com.example.demo.domain.user;
+import com.example.demo.domain.user.dto.PrivateUserDTO;
+import com.example.demo.domain.user.dto.PublicUserDTO;
 import org.mapstruct.Mapper;
 
 /**

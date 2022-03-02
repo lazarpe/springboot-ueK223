@@ -1,12 +1,9 @@
-package com.example.demo.domain.appUser;
+package com.example.demo.domain.user;
 
 
-import com.example.demo.domain.appUser.dto.PrivateUserDTO;
-import com.example.demo.domain.appUser.dto.PublicUserDTO;
-import com.example.demo.domain.role.Role;
+import com.example.demo.domain.user.dto.PrivateUserDTO;
 import com.example.demo.domain.role.RoleService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,7 +55,7 @@ public class UserController {
     public ResponseEntity<?> findById(@PathVariable UUID id) {
         try {
             return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
-        } catch (InstanceNotFoundException e) {
+        } catch (InstanceNotFoundException e) {     
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }

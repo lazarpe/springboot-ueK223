@@ -1,7 +1,5 @@
-package com.example.demo.domain.appUser;
+package com.example.demo.domain.user;
 
-
-import com.example.demo.domain.appUser.dto.PublicUserDTO;
 
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
