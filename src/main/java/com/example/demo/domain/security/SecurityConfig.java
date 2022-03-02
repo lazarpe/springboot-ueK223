@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
      @Override
      protected void configure(AuthenticationManagerBuilder auth) throws Exception {
          auth.userDetailsService(userDetailsService);
+
      }
 
      @Autowired
@@ -27,16 +28,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
          auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
      }
 
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic().and()
                 .authorizeRequests()
-                .antMatchers("/swagger-ui/**").permitAll()
-                .antMatchers("/**").hasRole("ADMIN")
                 .antMatchers("/**").hasRole("DEFAULT")
-                //            ^ this is the resource       ^ this is the role (for more roles you need .hasAnyRole(var args...))
                 .and()
-                .csrf().disable()
                 // some more method calls
                 .formLogin();
     }

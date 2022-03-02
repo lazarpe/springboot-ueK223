@@ -40,7 +40,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
             user.getRoles().forEach(role -> {
                 authorities.add(new SimpleGrantedAuthority("ROLE_"+role.getName()));
-                role.getAuthorities().forEach(authority -> authorities.add(new SimpleGrantedAuthority(authority.getName())));
+                role.getAuthorities().forEach(authority -> {
+                    authorities.add(new SimpleGrantedAuthority(authority.getName()));
+                });
             });
 //            return a spring internal user object that contains authorities and roles
             return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
@@ -71,24 +73,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User addRoleById(UUID id, UUID roleId) throws InstanceNotFoundException {
-        if (findById(id).isEmpty()) {
-            throw new NoSuchElementException("User is null");
-        }
-        if (!roleRepository.existsById(roleId)) {
-            throw new InstanceNotFoundException("Role not found");
-        }
-        if (roleRepository.findById(roleId).isEmpty()) {
-            throw new NoSuchElementException("Role is null");
-        }
-        User user = findById(id).get();
-        Set<Role> roles = user.getRoles();
-        roles.add(roleRepository.findById(roleId).get());
-        return user;
+    public Role saveRole(Role role) {
+        return roleRepository.save(role);
     }
 
     @Override
-    public User findByUsername(String username) {
+    public void addRoleToUser(String username, String rolename) {
+        User user = userRepository.findByUsername(username);
+        Role role = roleRepository.findByName(rolename);
+        user.getRoles().add(role);
+    }
+
+    @Override
+    public User getUser(String username) {
         return userRepository.findByUsername(username);
     }
     @Override
@@ -106,10 +103,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepository.findAll();
     }
 
-    @Override
-    public void deleteById(UUID id) {
-        userRepository.deleteById(id);
-    }
+
 
 
 }
