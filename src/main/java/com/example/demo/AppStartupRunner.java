@@ -53,18 +53,23 @@ class AppStartupRunner implements ApplicationRunner {
         Authority delete_auth = new Authority(null, "DELETE");
         authorityRepository.save(delete_auth);
 
+        Authority black_auth = new Authority(null, "BLA");
+        authorityRepository.save(black_auth);
+
 //       Roles
         Role default_role = new Role(null, "DEFAULT",Arrays.asList(read_auth));
-        roleRepository.save(default_role);
+        default_role = roleRepository.save(default_role);
 
         Role admin_role = new Role(null, "ADMIN", Arrays.asList(read_auth, add_auth, update_auth, delete_auth));
         roleRepository.save(admin_role);
 
+        Role bla_role = new Role(null, "BLA", Arrays.asList(read_auth, black_auth));
+        roleRepository.save(bla_role);
+
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
       
         User default_user = new User(null, "james","james.bond@mi6.com",passwordEncoder.encode("bond"), Set.of(default_role));
-      
-        userService.saveUser(default_user);
+        default_user = userService.saveUser(default_user);
         userService.addRoleById(default_user.getId(), default_role.getId());
 
         UserProfile testUserProfile = new UserProfile("French Street", "sadadsada.png", null, "Test bio but keep it up so let's gooo", default_user);

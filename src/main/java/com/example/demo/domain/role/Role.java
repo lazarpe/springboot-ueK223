@@ -32,13 +32,13 @@ public class Role {
     @Column(name="authorities")
     @UniqueElements
     @ManyToMany(fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinTable(
             joinColumns = @JoinColumn(
                     name = "role_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "authority_id", referencedColumnName = "id"))
     private List<Authority> authorities;
-
 
     public String toString() {
         return getName();
