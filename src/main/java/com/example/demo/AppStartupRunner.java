@@ -57,7 +57,8 @@ class AppStartupRunner implements ApplicationRunner {
 
         Role admin_role = new Role(null, "ADMIN", Arrays.asList(read_auth, add_auth, update_auth, delete_auth));
         roleRepository.save(admin_role);
-      
+
+        //Test User
         User default_user = new User("james","james.bond@mi6.com","bond", Set.of(default_role));
         userService.saveUser(default_user);
         userService.addRoleById(default_user.getId(), default_role.getId());
@@ -65,9 +66,16 @@ class AppStartupRunner implements ApplicationRunner {
         UserProfile testUserProfile = new UserProfile("French Street", "sadadsada.png", null, "Test bio but keep it up so let's gooo", default_user);
         userProfileService.saveUserProfile(testUserProfile);
 
+        //Admin
         User admin_user = new User("boss", "boss.lg@email.com", "bosspw", Set.of(admin_role));
 
         userService.saveUser(admin_user);
         userService.addRoleById(admin_user.getId(), admin_role.getId());
+
+        UserProfile adminUserProfile = new UserProfile("Boss ave", "boss-baby.png", null, "Who is the boss ?", admin_user);
+        userProfileService.saveUserProfile(adminUserProfile);
+
+
+
     }
 }

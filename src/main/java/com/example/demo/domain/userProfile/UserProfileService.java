@@ -11,9 +11,14 @@ import java.util.UUID;
  * Project name: demo
  **/
 public interface UserProfileService {
+
     UserProfile saveUserProfile(UserProfile userProfile) throws InstanceAlreadyExistsException;
-    Optional<UserProfile> getUserProfile(UUID uuid) throws InstanceNotFoundException;
-    void updateUserProfile(UserProfile userProfile, UUID uuid);
-    void deleteById(UUID id) throws InstanceNotFoundException;
+
+    Optional<UserProfile> getUserProfile(String username) throws InstanceNotFoundException;
+
+    void updateUserProfile(UserProfile userProfile, String username);
+
+    void deleteById(String username) throws InstanceNotFoundException;
+
     List<UserProfile> findAll();
 }
