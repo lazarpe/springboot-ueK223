@@ -1,11 +1,9 @@
-package com.example.demo.domain.appUser;
+package com.example.demo.domain.user;
 
-import com.example.demo.domain.appUser.dto.PublicUserDTO;
 import com.example.demo.domain.role.Role;
 import com.example.demo.domain.role.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -25,8 +23,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
     @Autowired
     private final RoleRepository roleRepository;
-
-    private final UserMapper userMapper;
 
 
     @Override
@@ -50,19 +46,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
     }
 
-    private Collection<? extends GrantedAuthority> getAuthorities(
-            Collection<Role> roles) {
-        List<GrantedAuthority> authorities
-                = new ArrayList<>();
-        for (Role role: roles) {
-            authorities.add(new SimpleGrantedAuthority(role.getName()));
-            role.getAuthorities().stream()
-                    .map(authority -> new SimpleGrantedAuthority(authority.getName()))
-                    .forEach(authorities::add);
-        }
-        return authorities;
-    }
-
     @Override
     public User saveUser(User user) throws InstanceAlreadyExistsException{
         if (userRepository.findByUsername(user.getUsername()) != null){
@@ -75,25 +58,25 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User addRoleById(UUID id, UUID roleId) throws InstanceNotFoundException {
-        if (findById(id).isEmpty()) {
+        Optional<User> optionalUser = findById(id);
+        if (optionalUser.isEmpty()) {
             throw new NoSuchElementException("User is null");
         }
+        User user = optionalUser.get();
         if (!roleRepository.existsById(roleId)) {
             throw new InstanceNotFoundException("Role not found");
         }
-        if (roleRepository.findById(roleId).isEmpty()) {
+        Optional<Role> optionalRole = roleRepository.findById(roleId);
+        if (optionalRole.isEmpty()) {
             throw new NoSuchElementException("Role is null");
         }
-        User user = findById(id).get();
         Set<Role> roles = user.getRoles();
-        roles.add(roleRepository.findById(roleId).get());
+        roles.add(optionalRole.get());
         return user;
     }
 
     @Override
-    public PublicUserDTO findByUsername(String username) {
-        return userMapper.convertUserToPublicUserDTO(userRepository.findByUsername(username));
-    }
+    public User findByUsername(String username) { return userRepository.findByUsername(username); }
 
     @Override
     public Optional<User> findById(UUID id) throws InstanceNotFoundException {

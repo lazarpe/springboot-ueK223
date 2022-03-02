@@ -1,13 +1,13 @@
 package com.example.demo;
 
-import com.example.demo.domain.appUser.User;
-import com.example.demo.domain.appUser.UserService;
+import com.example.demo.domain.user.User;
+import com.example.demo.domain.user.UserService;
 import com.example.demo.domain.authority.Authority;
 import com.example.demo.domain.authority.AuthorityRepository;
 import com.example.demo.domain.role.Role;
 import com.example.demo.domain.role.RoleRepository;
-import com.example.demo.domain.userProfile.UserProfile;
-import com.example.demo.domain.userProfile.UserProfileService;
+import com.example.demo.domain.userprofile.UserProfile;
+import com.example.demo.domain.userprofile.UserProfileService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,46 +38,41 @@ class AppStartupRunner implements ApplicationRunner {
 //        e.g. to add a user or role to the DB (only for testing)
 
 //        Authorities (CRUD)
-        Authority add_auth = new Authority(null, "CREATE");
-        authorityRepository.save(add_auth);
+        Authority addAuth = new Authority(null, "CREATE");
+        authorityRepository.save(addAuth);
 
-        Authority read_auth = new Authority(null,"READ");
-        authorityRepository.save(read_auth);
+        Authority readAuth = new Authority(null,"READ");
+        authorityRepository.save(readAuth);
 
-        Authority readAll_auth = new Authority(null, "READ-ALL");
-        authorityRepository.save(readAll_auth);
+        Authority readAllAuth = new Authority(null, "READ-ALL");
+        authorityRepository.save(readAllAuth);
 
-        Authority update_auth = new Authority(null, "UPDATE");
-        authorityRepository.save(update_auth);
+        Authority updateAuth = new Authority(null, "UPDATE");
+        authorityRepository.save(updateAuth);
 
-        Authority delete_auth = new Authority(null, "DELETE");
-        authorityRepository.save(delete_auth);
-
-        Authority black_auth = new Authority(null, "BLA");
-        authorityRepository.save(black_auth);
+        Authority deleteAuth = new Authority(null, "DELETE");
+        authorityRepository.save(deleteAuth);
 
 //       Roles
-        Role default_role = new Role(null, "DEFAULT",Arrays.asList(read_auth));
-        default_role = roleRepository.save(default_role);
+        Role defaultRole = new Role(null, "DEFAULT", List.of(readAuth));
+        roleRepository.save(defaultRole);
 
-        Role admin_role = new Role(null, "ADMIN", Arrays.asList(read_auth, add_auth, update_auth, delete_auth));
-        roleRepository.save(admin_role);
-
-        Role bla_role = new Role(null, "BLA", Arrays.asList(read_auth, black_auth));
-        roleRepository.save(bla_role);
+        Role adminRole = new Role(null, "ADMIN", Arrays.asList(readAuth, addAuth, updateAuth, deleteAuth));
+        roleRepository.save(adminRole);
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
       
-        User default_user = new User(null, "james","james.bond@mi6.com",passwordEncoder.encode("bond"), Set.of(default_role));
-        default_user = userService.saveUser(default_user);
-        userService.addRoleById(default_user.getId(), default_role.getId());
+        User defaultUser = new User(null, "james","james.bond@mi6.com",passwordEncoder.encode("bond"), Set.of(defaultRole));
+      
+        userService.saveUser(defaultUser);
+        userService.addRoleById(defaultUser.getId(), defaultRole.getId());
 
-        UserProfile testUserProfile = new UserProfile("French Street", "sadadsada.png", null, "Test bio but keep it up so let's gooo", default_user);
+        UserProfile testUserProfile = new UserProfile("French Street", "sadadsada.png", null, "Test bio but keep it up so let's gooo", defaultUser);
         userProfileService.saveUserProfile(testUserProfile);
 
-        User admin_user = new User(null, "boss", "boss@email.com", passwordEncoder.encode("bosspw"), Set.of(admin_role));
+        User adminUser = new User(null, "boss", "boss@email.com", passwordEncoder.encode("bosspw"), Set.of(adminRole));
 
-        userService.saveUser(admin_user);
-        userService.addRoleById(admin_user.getId(), admin_role.getId());
+        userService.saveUser(adminUser);
+        userService.addRoleById(adminUser.getId(), adminRole.getId());
     }
 }

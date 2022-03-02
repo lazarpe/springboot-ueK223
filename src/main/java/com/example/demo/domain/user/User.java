@@ -1,4 +1,4 @@
-package com.example.demo.domain.appUser;
+package com.example.demo.domain.user;
 
 import com.example.demo.domain.role.Role;
 import lombok.AllArgsConstructor;
@@ -10,6 +10,7 @@ import javax.validation.constraints.*;
 import java.util.Set;
 import java.util.UUID;
 
+// named "users" because "user" is reserved
 @Entity(name="users")
 @Getter@Setter
 @NoArgsConstructor @AllArgsConstructor

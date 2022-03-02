@@ -1,4 +1,4 @@
-package com.example.demo.domain.userProfile;
+package com.example.demo.domain.userprofile;
 
 import com.example.demo.domain.appUser.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
 import java.util.Collection;
 import java.util.Optional;

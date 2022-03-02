@@ -1,4 +1,4 @@
-package com.example.demo.domain.userProfile;
+package com.example.demo.domain.userprofile;
 
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
