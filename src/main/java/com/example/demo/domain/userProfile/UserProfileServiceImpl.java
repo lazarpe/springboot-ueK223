@@ -1,7 +1,7 @@
-package com.example.demo.domain.userProfile;
+package com.example.demo.domain.userprofile;
 
-import com.example.demo.domain.appUser.UserRepository;
-import com.example.demo.domain.appUser.UserServiceImpl;
+import com.example.demo.domain.user.UserRepository;
+import com.example.demo.domain.user.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
