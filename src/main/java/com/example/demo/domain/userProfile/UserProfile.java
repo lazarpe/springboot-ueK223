@@ -1,6 +1,6 @@
-package com.example.demo.domain.userProfile;
+package com.example.demo.domain.userprofile;
 
-import com.example.demo.domain.appUser.User;
+import com.example.demo.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

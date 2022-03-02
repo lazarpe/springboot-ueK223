@@ -34,7 +34,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/**").hasRole("ADMIN")
                 .antMatchers("/**").hasRole("DEFAULT")
-                //            ^ this is the resource       ^ this is the role (for more roles you need .hasAnyRole(var args...))
                 .and()
                 .csrf().disable()
                 // some more method calls

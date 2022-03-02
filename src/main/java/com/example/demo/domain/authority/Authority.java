@@ -3,7 +3,6 @@ package com.example.demo.domain.authority;
 import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-//import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Entity

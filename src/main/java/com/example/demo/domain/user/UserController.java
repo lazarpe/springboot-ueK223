@@ -1,4 +1,4 @@
-package com.example.demo.domain.appUser;
+package com.example.demo.domain.user;
 
 
 import lombok.RequiredArgsConstructor;
@@ -20,8 +20,12 @@ public class UserController {
 private final UserService userService;
 
     @PostMapping("/")
-    public User saveUser(@RequestBody User user) throws InstanceAlreadyExistsException {
-        return userService.saveUser(user);
+    public ResponseEntity<Object> save(@RequestBody User user) {
+        try {
+            return new ResponseEntity<>(userService.saveUser(user), HttpStatus.CREATED);
+        } catch (InstanceAlreadyExistsException e) {
+            return new ResponseEntity<>("user already exists", HttpStatus.CONFLICT);
+        }
     }
 
     @GetMapping("")
@@ -30,23 +34,28 @@ private final UserService userService;
     }
 
     @GetMapping("/username/{username}")
-    public User findByUsername(String username) {
-        return userService.findByUsername(username);
+    public ResponseEntity<Object> findByUsername(@PathVariable String username) {
+        User user = userService.findByUsername(username);
+        if (user != null) {
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("user is null", HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<?> findById(@PathVariable UUID id) {
+    public ResponseEntity<Object> findById(@PathVariable UUID id) {
         try {
             return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
         } catch (InstanceNotFoundException e) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("user not found", HttpStatus.NOT_FOUND);
         }
     }
 
     @PutMapping("/id/{id}/role/id/{roleId}")
-    public ResponseEntity<?> addRoleById(@PathVariable UUID id, @PathVariable UUID roleId) {
+    public ResponseEntity<Object> addRoleById(@PathVariable UUID id, @PathVariable UUID roleId) {
         try {
-            return new ResponseEntity<>(userService.addRoleById(id, roleId), HttpStatus.CREATED);
+            return new ResponseEntity<>(userService.addRoleById(id, roleId), HttpStatus.OK);
         } catch (InstanceNotFoundException e) {
             return new ResponseEntity<>("user or role not found", HttpStatus.NOT_FOUND);
         } catch (NoSuchElementException e) {
@@ -55,7 +64,7 @@ private final UserService userService;
     }
 
     @DeleteMapping("/id/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable UUID id) {
+    public ResponseEntity<String> deleteById(@PathVariable UUID id) {
         try {
             userService.deleteById(id);
             return new ResponseEntity<>("user deleted", HttpStatus.OK);

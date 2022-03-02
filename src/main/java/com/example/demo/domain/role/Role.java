@@ -1,13 +1,10 @@
 package com.example.demo.domain.role;
 
-import com.example.demo.domain.appUser.User;
 import com.example.demo.domain.authority.Authority;
 import lombok.*;
 import org.hibernate.validator.constraints.UniqueElements;
-//import org.hibernate.validator.constraints.UniqueElements;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-//import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,13 +27,13 @@ public class Role {
     @Column(name="authorities")
     @UniqueElements
     @ManyToMany(fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinTable(
             joinColumns = @JoinColumn(
                     name = "role_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "authority_id", referencedColumnName = "id"))
     private List<Authority> authorities;
-
 
     public String toString() {
         return getName();

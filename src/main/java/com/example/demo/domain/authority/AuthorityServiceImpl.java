@@ -46,7 +46,13 @@ public class AuthorityServiceImpl implements AuthorityService {
   }
 
   @Override
-  public Authority updateNameByName(String name, String newName) {
+  public Authority updateNameByName(String name, String newName) throws InstanceNotFoundException, InstanceAlreadyExistsException {
+    if (authorityRepository.findByName(name) == null) {
+      throw new InstanceNotFoundException("authority is null");
+    }
+    if (authorityRepository.findByName(newName) != null) {
+      throw new InstanceAlreadyExistsException("authority with this name already exists");
+    }
     authorityRepository.updateNameByName(name, newName);
     return authorityRepository.findByName(newName);
   }

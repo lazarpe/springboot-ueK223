@@ -1,4 +1,4 @@
-package com.example.demo.domain.userProfile;
+package com.example.demo.domain.userprofile;
 
 import com.example.demo.domain.appUser.User;
 import com.example.demo.domain.appUser.UserRepository;
@@ -6,7 +6,6 @@ import com.example.demo.domain.appUser.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
 import javax.transaction.Transactional;
