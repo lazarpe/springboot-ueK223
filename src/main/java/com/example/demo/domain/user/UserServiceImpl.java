@@ -4,26 +4,23 @@ import com.example.demo.domain.role.Role;
 import com.example.demo.domain.role.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
 import javax.transaction.Transactional;
-
 import java.util.*;
 
 @Service @RequiredArgsConstructor @Transactional
 public class UserServiceImpl implements UserService, UserDetailsService {
-
     @Autowired
     private final UserRepository userRepository;
     @Autowired
     private final RoleRepository roleRepository;
-
 
     @Override
 //    This method is used for security authentication, use caution when changing this
@@ -46,6 +43,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
     }
 
+    private Collection<? extends GrantedAuthority> getAuthorities(
+            Collection<Role> roles) {
+        List<GrantedAuthority> authorities
+                = new ArrayList<>();
+        for (Role role: roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+            role.getAuthorities().stream()
+                    .map(authority -> new SimpleGrantedAuthority(authority.getName()))
+                    .forEach(authorities::add);
+        }
+        return authorities;
+    }
+
     @Override
     public User saveUser(User user) throws InstanceAlreadyExistsException{
         if (userRepository.findByUsername(user.getUsername()) != null){
@@ -58,20 +68,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User addRoleById(UUID id, UUID roleId) throws InstanceNotFoundException {
-        Optional<User> optionalUser = findById(id);
-        if (optionalUser.isEmpty()) {
+        if (findById(id).isEmpty()) {
             throw new NoSuchElementException("User is null");
         }
-        User user = optionalUser.get();
         if (!roleRepository.existsById(roleId)) {
             throw new InstanceNotFoundException("Role not found");
         }
-        Optional<Role> optionalRole = roleRepository.findById(roleId);
-        if (optionalRole.isEmpty()) {
+        if (roleRepository.findById(roleId).isEmpty()) {
             throw new NoSuchElementException("Role is null");
         }
+        User user = findById(id).get();
         Set<Role> roles = user.getRoles();
-        roles.add(optionalRole.get());
+        roles.add(roleRepository.findById(roleId).get());
         return user;
     }
 
