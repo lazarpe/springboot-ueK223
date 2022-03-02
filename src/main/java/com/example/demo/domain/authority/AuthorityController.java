@@ -19,10 +19,10 @@ public class AuthorityController {
 
   private final AuthorityService authorityService;
 
-  @PostMapping("")
-  public ResponseEntity<?> save(@RequestBody Authority authority) {
+  @PostMapping("/name/{name}")
+  public ResponseEntity<Object> save(@PathVariable String name) {
     try {
-      return new ResponseEntity<>(authorityService.save(authority), HttpStatus.CREATED);
+      return new ResponseEntity<>(authorityService.save(new Authority(null, name)), HttpStatus.CREATED);
     } catch (InstanceAlreadyExistsException e) {
       return new ResponseEntity<>("authority already exists", HttpStatus.CONFLICT);
     }
@@ -34,10 +34,13 @@ public class AuthorityController {
   }
 
   @GetMapping("/id/{id}")
-  public ResponseEntity<?> findById(@PathVariable UUID id) {
+  public ResponseEntity<Object> findById(@PathVariable UUID id) {
     try {
       Optional<Authority> authority = authorityService.findById(id);
-      return new ResponseEntity<>(authority.orElse(null), HttpStatus.OK);
+      if (authority.isEmpty()) {
+        return new ResponseEntity<>("authority is null", HttpStatus.NOT_FOUND);
+      }
+      return new ResponseEntity<>(authority.get(), HttpStatus.OK);
     } catch (InstanceNotFoundException e) {
       return new ResponseEntity<>("authority not found", HttpStatus.NOT_FOUND);
     }
@@ -54,7 +57,7 @@ public class AuthorityController {
   }
 
   @DeleteMapping("/id/{id}")
-  public ResponseEntity<?> deleteById(@PathVariable UUID id) {
+  public ResponseEntity<String> deleteById(@PathVariable UUID id) {
     try {
       authorityService.deleteById(id);
       return new ResponseEntity<>("authority deleted", HttpStatus.OK);
