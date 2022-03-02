@@ -11,7 +11,6 @@ import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
 import java.util.Collection;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController @RequestMapping("/api/user")
@@ -45,11 +44,11 @@ private final UserService userService;
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<Optional<User>> findById(@PathVariable UUID id) {
+    public ResponseEntity<Object> findById(@PathVariable UUID id) {
         try {
             return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
         } catch (InstanceNotFoundException e) {
-            return new ResponseEntity<>(Optional.empty(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("user not found", HttpStatus.NOT_FOUND);
         }
     }
 
