@@ -52,15 +52,16 @@ public class UserProfileController {
     @GetMapping("/{username}")
     public ResponseEntity<Object> findByUsername(@PathVariable String username) {
         if (userSecurity.hasRole(userSecurity.getCurrentlyLoggedInUser(), "ROLE_ADMIN")) {
-            System.out.println("COOL MAAAPING: " + userProfileMapper.convertUserProfileToPublicUserProfileDTO(userProfileService.getUserProfile(username)).toString());
-            return new ResponseEntity<>(userProfileService.getUserProfile(username), HttpStatus.OK);
+            return new ResponseEntity<>(
+                    userProfileService.getUserProfile(username)
+                    , HttpStatus.OK);
         } else {
-            System.out.println("MAAAPING: " + userProfileMapper.convertUserProfileToPublicUserProfileDTO(userProfileService.getUserProfile(username)).toString());
-            return new ResponseEntity<>(userProfileMapper.convertUserProfileToPublicUserProfileDTO(userProfileService.getUserProfile(username)), HttpStatus.OK);
+            return new ResponseEntity<>(
+                    userProfileMapper.convertUserProfileToPublicUserProfileDTO(userProfileService.getUserProfile(username))
+                    , HttpStatus.OK);
         }
     }
 
-    //ok
     @Operation(summary="Endpoint for only administrators, which displays all user profiles with pagination and sorting by username.")
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{page}/{valuesPerPage}")
