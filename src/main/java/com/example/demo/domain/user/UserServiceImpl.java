@@ -63,15 +63,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User addRoleById(UUID uuid, UUID roleId) throws InstanceNotFoundException {
+        User user = findById(uuid);
         if (!roleRepository.existsById(roleId)) {
             throw new InstanceNotFoundException("Role not found");
         }
-        if (roleRepository.findById(roleId).isEmpty()) {
+        Optional<Role> optionalRole = roleRepository.findById(roleId);
+        if (optionalRole.isEmpty()) {
             throw new NoSuchElementException("Role is null");
         }
-        User user = findById(uuid);
         Set<Role> roles = user.getRoles();
-        roles.add(roleRepository.findById(roleId).get());
+        roles.add(optionalRole.get());
         return user;
     }
 
