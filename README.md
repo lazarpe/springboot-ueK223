@@ -1,47 +1,28 @@
-# springboot-ueK223
+# üK 223
+### Requirements
+- Java JDK Version 11
+- Docker Container:
+    - PostgeSQL 
+      - port: 5432
+      - Username: postgres
+      - Password: postgres
 
-* Below I listed a summary of the main tasks and criterias which should be accomplished before the deadline. If one has been *
+---
 
+### Application setup
+After the Container is running with the DB you can start the spring application and you should be
+able to log in with either a...
+- default user (username: james, pw = bond) 
+- admin user (username: boss, pw = bosspw)
 
-## Initial position
+### User and roles
+In our AppStartupRunner we have created two roles, two users and a few authorities (rights). 
+####Pre defined roles and authorities:
+- ROLE_ADMIN
+    - CRUD for ALL users
+  
+- ROLE_DEFAULT
+    -  CRUD for himself
+    - every user can lookup other users, but will get public info only (Extra feature :D)
 
-- Create a backend for Blog website, which can make blog posts
-
-- Posts are open public
-
-- Users information should be kept private, but their profile not
-
-
-## Criteria 
-
-### Group specific
-
-- Only the user and an administrator can perform CRUD methods on their profiles
-
-- A User can have only one user profile
-
-- Admin can display all user profiles and can sort through the paginated pages
-
-
-### User Management
-
-- User should have CRUD functionalities
-
-- Passwords from new user should get encoded
-
-- Users can access their user information and Administrators can access the same for every user
-
-
-### Security
-
-- Authorization and authority specific endpoints should be in place
-
-
-### Bonuses
-
-- DTO objects for transfer
-
-- Logging user actions and if still time WAL( Write ahead log ) Log the action and then execute the DB action
-
-- Custom Queries and Transactions
 
