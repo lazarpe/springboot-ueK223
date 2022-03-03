@@ -27,7 +27,7 @@ public class AuthorityController {
     try {
       return new ResponseEntity<>(authorityService.save(new Authority(null, name)), HttpStatus.CREATED);
     } catch (InstanceAlreadyExistsException e) {
-      return new ResponseEntity<>("authority already exists", HttpStatus.CONFLICT);
+      return new ResponseEntity<>("authority \"" + name + "\" already exists", HttpStatus.CONFLICT);
     }
   }
 
@@ -65,7 +65,7 @@ public class AuthorityController {
     } catch (InstanceNotFoundException e) {
       return authorityNotFound;
     } catch (InstanceAlreadyExistsException e) {
-      return new ResponseEntity<>("authority with this name already exists", HttpStatus.CONFLICT);
+      return new ResponseEntity<>("authority \"" + newName + "\" already exists", HttpStatus.CONFLICT);
     }
   }
 

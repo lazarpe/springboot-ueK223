@@ -14,7 +14,7 @@ public interface AuthorityRepository extends JpaRepository<Authority, UUID> {
     Authority findByName(String name);
 
     @Transactional
-    @Modifying
+    @Modifying(clearAutomatically=true, flushAutomatically = true)
     @Query("update Authority a set a.name = ?2 where a.name = ?1")
     void updateNameByName(String name, String newName);
 

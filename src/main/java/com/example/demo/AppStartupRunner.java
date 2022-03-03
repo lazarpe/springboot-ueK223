@@ -52,7 +52,6 @@ class AppStartupRunner implements ApplicationRunner {
         Authority deleteAuth = new Authority(null, "DELETE");
         authorityRepository.save(deleteAuth);
 
-
 //       Roles
         Role defaultRole = new Role(null, "DEFAULT", List.of(readAuth));
         roleRepository.save(defaultRole);
