@@ -2,6 +2,7 @@ package com.example.demo.domain.user;
 import com.example.demo.domain.role.RoleService;
 import com.example.demo.domain.security.UserSecurity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,14 +11,19 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
+import javax.validation.Valid;
 import java.util.*;
 
 @RestController @RequestMapping("/api/user")
 @RequiredArgsConstructor
 public class UserController {
+  
+    @Autowired
     private final UserService userService;
+    @Autowired
+    private final RoleService roleService;
+
     private final UserMapper userMapper;
-    private final UserSecurity userSecurity;
 
     /**
      * Saves a new user to the db with hibernate (everyone is allowed to create new users)
@@ -26,8 +32,8 @@ public class UserController {
      * @throws InstanceAlreadyExistsException will throw the exception if the users instance already exists
      */
     @PostMapping("/")
-    public User saveUser(@RequestBody User user) throws InstanceAlreadyExistsException {
-        return userService.saveUser(user);
+    public ResponseEntity<User> saveUser(@Valid @RequestBody User user) {
+        return new ResponseEntity<>(userService.saveUser(user), HttpStatus.CREATED);
     }
 
     /**
@@ -50,68 +56,66 @@ public class UserController {
      */
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_DEFAULT')")
     @GetMapping("/username/{username}")
-    public ResponseEntity<Object> findByUsername(@PathVariable String username) {
+   public ResponseEntity<Object> findByUsername(@PathVariable String username) {
         if (userSecurity.hasRole(userSecurity.getCurrentlyLoggedInUser(), "ROLE_ADMIN")) {
             return new ResponseEntity<>(userService.findByUsername(username), HttpStatus.OK);
         } else if (userSecurity.getCurrentlyLoggedInUser().getName().equals(username)) {
             return new ResponseEntity<>(
-                    userMapper.convertUserToPrivateUserDTO(userService.findByUsername(username))
-                    , HttpStatus.OK);
+                    userMapper.convertUserToPrivateUserDTO(userService.findByUsername(username)), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(
-                    userMapper.convertUserToPublicUserDTO(userService.findByUsername(username))
-                    , HttpStatus.OK);
+                    userMapper.convertUserToPublicUserDTO(userService.findByUsername(username)), HttpStatus.OK);
         }
     }
-
-    /**
+  
+  
+   /**
      * Only admin role users can search users by their ID because this backend info is not available for the default
      * role users.
      * @param id id value from the url path
      * @return User entity (no DTO because an admin role user is allowed to see EVERYTHING)
      */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/id/{id}")
-    public ResponseEntity<Object> findById(@PathVariable UUID id) {
-        try {
-            return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
-        } catch (InstanceNotFoundException e) {
-            return new ResponseEntity<>("user not found", HttpStatus.NOT_FOUND);
-        }
+    @GetMapping("/id/{uuid}")
+    public ResponseEntity<User> findById(@PathVariable UUID uuid) {
+        return new ResponseEntity<>(userService.findById(uuid), HttpStatus.OK);
     }
-
+  
+  
     /**
      * Only admin role users can add roles to users.
      * @param id value from the url path
      * @param roleId value from the url path
      * @return ResponseEntity based on dynamic behaviour of users interactions with the program
      */
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PutMapping("/id/{id}/role/id/{roleId}")
-    public ResponseEntity<Object> addRoleById(@PathVariable UUID id, @PathVariable UUID roleId) {
-        try {
-            return new ResponseEntity<>(userService.addRoleById(id, roleId), HttpStatus.OK);
-        } catch (InstanceNotFoundException e) {
-            return new ResponseEntity<>("user or role not found", HttpStatus.NOT_FOUND);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>("user or role is null", HttpStatus.NOT_FOUND);
-        }
+    @PutMapping("/id/{uuid}/role/id/{roleId}")
+    public ResponseEntity<Object> addRoleById(@PathVariable UUID uuid, @PathVariable UUID roleId) throws InstanceNotFoundException {
+        return new ResponseEntity<>(userService.addRoleById(uuid, roleId), HttpStatus.OK);
+    }
+
+
+    /**
+     * admin users can delete user accounts by username, which will delete the userprofile of the connected user automatically
+     * because of the 1 to 1 relation with the userprofile.
+     * @param username value from the url path
+     * @return ResponseEntity which prints that a user (didn't) get deleted
+     */
+    @DeleteMapping("/username/{username}")
+    public ResponseEntity<String> deleteByUsername(@PathVariable String username) {
+        return new ResponseEntity<>(userService.deleteByUsername(username), HttpStatus.OK);
     }
 
     /**
      * admin users can delete user accounts by ID, which will delete the userprofile of the connected user automatically
      * because of the 1 to 1 relation with the userprofile.
      * @param id value from the url path
-     * @return ResponseEntity which prints that a user (didn't) got deleted
+     * @return ResponseEntity which prints that a user (didn't) get deleted
      */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/id/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable UUID id) {
-        try {
-            userService.deleteById(id);
-            return new ResponseEntity<>("user deleted", HttpStatus.OK);
-        } catch (EmptyResultDataAccessException e) {
-            return new ResponseEntity<>("user is null", HttpStatus.NOT_FOUND);
-        }
+    @DeleteMapping("/id/{uuid}")
+    public ResponseEntity<String> deleteById(@PathVariable UUID uuid) {
+        return new ResponseEntity<>(userService.deleteById(uuid), HttpStatus.OK);
+    }
+
     }
 }

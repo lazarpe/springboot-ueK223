@@ -1,20 +1,16 @@
 package com.example.demo.domain.userProfile;
 
-import javax.management.InstanceAlreadyExistsException;
-import javax.management.InstanceNotFoundException;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 public interface UserProfileService {
 
-    UserProfile saveUserProfile(UserProfile userProfile) throws InstanceAlreadyExistsException;
+    UserProfile saveUserProfile(UserProfile userProfile);
 
-    Optional<UserProfile> getUserProfile(String username) throws InstanceNotFoundException;
+    UserProfile getUserProfile(String username);
 
-    void updateUserProfile(UserProfile userProfile, String username);
+    UserProfile updateUserProfile(UserProfile userProfile, String username);
 
-    void deleteById(String username) throws InstanceNotFoundException;
+    String deleteById(String username);
 
     List<UserProfile> findAllWithPagination(Integer page, Integer valuesPerPage);
 

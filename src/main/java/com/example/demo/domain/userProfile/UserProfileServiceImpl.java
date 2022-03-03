@@ -13,7 +13,7 @@ import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -22,65 +22,49 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     @Autowired
     private final UserProfileRepository userProfileRepository;
-
     @Autowired
     private final UserRepository userRepository;
-
     @Autowired
     private final UserServiceImpl userService;
 
-    /**
-     * Saves a userprofile only if the user exists. There can be no profile without a user (with account details)
-     * @param userProfile
-     * @return UserProfile
-     * @throws InstanceAlreadyExistsException
-     */
     @Override
     public UserProfile saveUserProfile(UserProfile userProfile) {
         return userProfileRepository.save(userProfile);
     }
 
-    /**
-     *
-     * @param userProfile
-     * @param
-     */
     @Override
-    public void updateUserProfile(UserProfile userProfile, String username) {
-        User foundUser = userService.findByUsername(username);
-            userProfileRepository.findByUserId(foundUser.getId()).map( foundUserProfile -> {
-             foundUserProfile.setLocation(userProfile.getLocation());
-             foundUserProfile.setBiography(userProfile.getBiography());
-             foundUserProfile.setProfilePictureURL(userProfile.getProfilePictureURL());
-             foundUserProfile.setDateOfBirth(userProfile.getDateOfBirth());
-             return userProfileRepository.save(foundUserProfile);
-            }).orElseGet(() -> {
-                userProfile.setUser(foundUser);
-                return userProfileRepository.save(userProfile);
-            });
+    public UserProfile updateUserProfile(UserProfile userProfile, String username) {
+        User foundUser = findUser(username);
+        return userProfileRepository.findByUserId(foundUser.getId()).map( foundUserProfile -> {
+            foundUserProfile.setLocation(userProfile.getLocation());
+            foundUserProfile.setBiography(userProfile.getBiography());
+            foundUserProfile.setProfilePictureURL(userProfile.getProfilePictureURL());
+            foundUserProfile.setDateOfBirth(userProfile.getDateOfBirth());
+            return userProfileRepository.save(foundUserProfile);
+        }).orElseGet(() -> {
+            userProfile.setUser(foundUser);
+            return userProfileRepository.save(userProfile);
+        });
     }
 
-    /**
-     *
-     * @param username
-     * @throws InstanceNotFoundException
-     */
     @Override
-    public void deleteById(String username) throws InstanceNotFoundException {
-        User foundUser = userService.findByUsername(username);
-        userProfileRepository.deleteById(userProfileRepository.findByUserId(foundUser.getId()).get().getId());
+    public String deleteById(String username) {
+        User foundUser = findUser(username);
+        userProfileRepository.deleteById(userProfileRepository.findByUserId(foundUser.getId()).orElseThrow().getId());
+        return foundUser.getUsername() + " successfully deleted";
     }
 
-    //Currently can only get user profile through it's ID and not through user
-    /**
-     *
-     * @param username
-     * @return
-     */
+    public User findUser(String username) {
+        if(userService.findByUsername(username) == null){
+            throw new NoSuchElementException("No user profile found by that name.");
+        }
+        return userService.findByUsername(username);
+    }
+
     @Override
-    public Optional<UserProfile> getUserProfile(String username) {
-        User foundUser = userService.findByUsername(username);
-        return userProfileRepository.findByUserId(foundUser.getId());
+    public UserProfile getUserProfile(String username) {
+        User foundUser = findUser(username);
+        return userProfileRepository.findByUserId(foundUser.getId()).orElseThrow();
     }
 
     @Override

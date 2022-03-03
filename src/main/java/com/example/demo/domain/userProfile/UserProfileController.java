@@ -1,14 +1,14 @@
 package com.example.demo.domain.userProfile;
+
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import javax.management.InstanceNotFoundException;
 import javax.validation.Valid;
 import java.util.Collection;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/profile")
@@ -25,15 +25,15 @@ public class UserProfileController {
     }
 
     @Operation(summary="Endpoint for deleting a userProfile with a given.")
+    @PreAuthorize("hasRole('ADMIN')") // => Only an admin can delete a profile since they don't explicitly need one. However, a user can only delete them in userController and in that operation their profile will additionally be deleted.
     @DeleteMapping("/{username}")
-    public void deleteUserProfile(@PathVariable String username) throws InstanceNotFoundException {
-        userProfileService.deleteById(username);
-        ResponseEntity.ok().body("Profile Deleted");
+    public ResponseEntity<String> deleteUserProfile(@PathVariable String username) {
+        return new ResponseEntity<>(userProfileService.deleteById(username), HttpStatus.ACCEPTED);
     }
 
     @Operation(summary="Endpoint for finding a specific user by username.")
     @GetMapping("/{username}")
-    public ResponseEntity<Optional<UserProfile>> findByUsername(@PathVariable String username) {
+    public ResponseEntity<UserProfile> findByUsername(@PathVariable String username) {
         return new ResponseEntity<>(userProfileService.getUserProfile(username), HttpStatus.OK);
     }
 
@@ -44,7 +44,7 @@ public class UserProfileController {
         return new ResponseEntity<>(userProfileService.findAllWithPagination(page, valuesPerPage), HttpStatus.OK);
     }
 
-    @Operation(summary="Endpoint for only administrators, which displays all user profiles.")
+    @Operation(summary="Endpoint for only administrators, which displays all user profiles.")//add parameters to all swagger stuff
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/")
     public ResponseEntity<Collection<UserProfile>> findAllUserProfiles() {
@@ -53,8 +53,7 @@ public class UserProfileController {
 
     @Operation(summary="Endpoint for editing a user profile.")
     @PutMapping("/{username}")
-    public void updateUserProfile(@Valid @RequestBody UserProfile userProfile, @PathVariable String username) {
-        userProfileService.updateUserProfile(userProfile, username);
-        ResponseEntity.ok().body("User profile updated");
+    public ResponseEntity<UserProfile> updateUserProfile(@Valid @RequestBody UserProfile userProfile, @PathVariable String username) {
+        return new ResponseEntity<>(userProfileService.updateUserProfile(userProfile, username), HttpStatus.OK);
     }
 }
