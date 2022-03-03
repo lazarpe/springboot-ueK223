@@ -22,6 +22,8 @@ public class UserController {
     private final UserService userService;
     @Autowired
     private final RoleService roleService;
+    @Autowired
+    private final UserSecurity userSecurity;
 
     private final UserMapper userMapper;
 
@@ -72,7 +74,7 @@ public class UserController {
    /**
      * Only admin role users can search users by their ID because this backend info is not available for the default
      * role users.
-     * @param id id value from the url path
+     * @param uuid id value from the url path
      * @return User entity (no DTO because an admin role user is allowed to see EVERYTHING)
      */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -84,7 +86,7 @@ public class UserController {
   
     /**
      * Only admin role users can add roles to users.
-     * @param id value from the url path
+     * @param uuid value from the url path
      * @param roleId value from the url path
      * @return ResponseEntity based on dynamic behaviour of users interactions with the program
      */
@@ -108,14 +110,12 @@ public class UserController {
     /**
      * admin users can delete user accounts by ID, which will delete the userprofile of the connected user automatically
      * because of the 1 to 1 relation with the userprofile.
-     * @param id value from the url path
+     * @param uuid value from the url path
      * @return ResponseEntity which prints that a user (didn't) get deleted
      */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/id/{uuid}")
     public ResponseEntity<String> deleteById(@PathVariable UUID uuid) {
         return new ResponseEntity<>(userService.deleteById(uuid), HttpStatus.OK);
-    }
-
     }
 }
