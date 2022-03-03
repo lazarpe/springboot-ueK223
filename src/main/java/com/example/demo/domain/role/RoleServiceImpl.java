@@ -12,14 +12,14 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class RoleServiceImpl implements RoleService{
+public class RoleServiceImpl implements RoleService {
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
     private AuthorityRepository authorityRepository;
 
     @Override
-    public void addAuthorityToRole( String rolename, String authorityname) {
+    public void addAuthorityToRole(String rolename, String authorityname) {
         Authority authority = authorityRepository.findByName(authorityname);
         Role role = roleRepository.findByName(rolename);
         role.getAuthorities().add(authority);

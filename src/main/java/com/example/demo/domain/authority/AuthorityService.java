@@ -10,10 +10,15 @@ import java.util.UUID;
 
 @Service
 public interface AuthorityService {
-  Authority save(Authority authority) throws InstanceAlreadyExistsException;
-  Authority findByName(String name);
-  Optional<Authority> findById(UUID id) throws InstanceNotFoundException;
-  List<Authority> findAll();
-  Authority updateNameByName(String name, String newName) throws InstanceNotFoundException, InstanceAlreadyExistsException;
-  void deleteById(UUID id);
+    Authority save(Authority authority) throws InstanceAlreadyExistsException;
+
+    Authority findByName(String name);
+
+    Optional<Authority> findById(UUID id) throws InstanceNotFoundException;
+
+    List<Authority> findAll();
+
+    Authority updateNameByName(String name, String newName) throws InstanceNotFoundException, InstanceAlreadyExistsException;
+
+    void deleteById(UUID id);
 }

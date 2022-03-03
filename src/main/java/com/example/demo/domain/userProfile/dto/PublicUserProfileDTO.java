@@ -1,11 +1,7 @@
 package com.example.demo.domain.userProfile.dto;
 
-import com.example.demo.domain.user.User;
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import java.time.LocalDate;
 
 /**

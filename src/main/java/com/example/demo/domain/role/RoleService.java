@@ -7,13 +7,19 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface RoleService {
-    void addAuthorityToRole( String rolename, String authorityname);
+    void addAuthorityToRole(String rolename, String authorityname);
 
     String saveRole(Role role) throws InstanceAlreadyExistsException;
+
     void udpateRole(Role role, UUID id) throws InstanceNotFoundException;
+
     void deleteRole(UUID id);
+
     Role getRole(String roleName);
+
     Optional<Role> findById(UUID id) throws InstanceNotFoundException;
+
     Role findByRoleName(String rolename) throws InstanceNotFoundException;
+
     List<Role> findAll();
 }

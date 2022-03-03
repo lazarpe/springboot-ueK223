@@ -9,8 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import javax.management.InstanceAlreadyExistsException;
-import javax.management.InstanceNotFoundException;
+
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -35,7 +34,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     @Override
     public UserProfile updateUserProfile(UserProfile userProfile, String username) {
         User foundUser = findUser(username);
-        return userProfileRepository.findByUserId(foundUser.getId()).map( foundUserProfile -> {
+        return userProfileRepository.findByUserId(foundUser.getId()).map(foundUserProfile -> {
             foundUserProfile.setLocation(userProfile.getLocation());
             foundUserProfile.setBiography(userProfile.getBiography());
             foundUserProfile.setProfilePictureURL(userProfile.getProfilePictureURL());
@@ -55,7 +54,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     public User findUser(String username) {
-        if(userService.findByUsername(username) == null){
+        if (userService.findByUsername(username) == null) {
             throw new NoSuchElementException("No user profile found by that name.");
         }
         return userService.findByUsername(username);
@@ -68,7 +67,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     @Override
-    public List<UserProfile> findAllWithPagination(Integer page,Integer valuesPerPage) {
+    public List<UserProfile> findAllWithPagination(Integer page, Integer valuesPerPage) {
         Pageable sortedByName = PageRequest.of(page, valuesPerPage, Sort.by("user.username").ascending());
         return userProfileRepository.findAll(sortedByName).getContent();
     }

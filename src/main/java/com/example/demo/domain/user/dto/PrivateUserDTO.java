@@ -27,6 +27,6 @@ public class PrivateUserDTO {
     private String email;
 
     @NotNull
-    @Size(min=4)
+    @Size(min = 4)
     private String password;
 }

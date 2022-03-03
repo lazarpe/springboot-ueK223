@@ -5,38 +5,41 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Entity(name="userprofile")
-@Getter@Setter
-@NoArgsConstructor @AllArgsConstructor
+@Entity(name = "userprofile")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserProfile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="id")
+    @Column(name = "id")
     private UUID id;
 
-    @Column(name="location")
+    @Column(name = "location")
     private String location;
 
-    @Column(name="profilePictureURL")
+    @Column(name = "profilePictureURL")
     private String profilePictureURL;
 
-    @Column(name="dateOfBirth")
+    @Column(name = "dateOfBirth")
     private LocalDate dateOfBirth;
 
     //Still going to decide on this
     //@Transient
     //private Integer age;
 
-    @Column(name="biography")
+    @Column(name = "biography")
     private String biography;
 
     @OneToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     public UserProfile(String location, String profilePicture, LocalDate dateOfBirth, String biography, User user) {

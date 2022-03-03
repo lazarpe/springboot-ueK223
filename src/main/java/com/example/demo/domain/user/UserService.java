@@ -1,12 +1,13 @@
 package com.example.demo.domain.user;
 
+import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
 import java.util.List;
 import java.util.UUID;
 
 public interface UserService {
 
-    User saveUser(User user);
+    User saveUser(User user) throws InstanceAlreadyExistsException;
 
     User addRoleById(UUID uuid, UUID roleId) throws InstanceNotFoundException;
 

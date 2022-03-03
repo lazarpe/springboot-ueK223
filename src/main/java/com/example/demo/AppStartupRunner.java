@@ -1,11 +1,11 @@
 package com.example.demo;
 
-import com.example.demo.domain.user.User;
-import com.example.demo.domain.user.UserService;
 import com.example.demo.domain.authority.Authority;
 import com.example.demo.domain.authority.AuthorityRepository;
 import com.example.demo.domain.role.Role;
 import com.example.demo.domain.role.RoleRepository;
+import com.example.demo.domain.user.User;
+import com.example.demo.domain.user.UserService;
 import com.example.demo.domain.userProfile.UserProfile;
 import com.example.demo.domain.userProfile.UserProfileService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -40,7 +42,7 @@ class AppStartupRunner implements ApplicationRunner {
         Authority addAuth = new Authority(null, "CREATE");
         authorityRepository.save(addAuth);
 
-        Authority readAuth = new Authority(null,"READ");
+        Authority readAuth = new Authority(null, "READ");
         authorityRepository.save(readAuth);
 
         Authority readAllAuth = new Authority(null, "READ-ALL");
@@ -60,10 +62,10 @@ class AppStartupRunner implements ApplicationRunner {
         roleRepository.save(adminRole);
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-      
+
         //Test User
-        User defaultUser = new User(null, "james","james.bond@mi6.com",passwordEncoder.encode("bond"), Set.of(defaultRole));
-      
+        User defaultUser = new User(null, "james", "james.bond@mi6.com", passwordEncoder.encode("bond"), Set.of(defaultRole));
+
         userService.saveUser(defaultUser);
         userService.addRoleById(defaultUser.getId(), defaultRole.getId());
 
@@ -72,7 +74,7 @@ class AppStartupRunner implements ApplicationRunner {
 
         //Admin
         User adminUser = new User(null, "boss", "boss@email.com", passwordEncoder.encode("bosspw"), Set.of(adminRole));
-      
+
         userService.saveUser(adminUser);
         userService.addRoleById(adminUser.getId(), adminRole.getId());
         userService.addRoleById(adminUser.getId(), defaultRole.getId());

@@ -1,24 +1,25 @@
 package com.example.demo.domain.user;
+
 import com.example.demo.domain.role.RoleService;
 import com.example.demo.domain.security.UserSecurity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
 import javax.validation.Valid;
-import java.util.*;
+import java.util.Collection;
+import java.util.UUID;
 
-@RestController @RequestMapping("/api/user")
+@RestController
+@RequestMapping("/api/user")
 @RequiredArgsConstructor
 public class UserController {
-  
+
     @Autowired
     private final UserService userService;
     @Autowired
@@ -30,17 +31,19 @@ public class UserController {
 
     /**
      * Saves a new user to the db with hibernate (everyone is allowed to create new users)
+     *
      * @param user The JSON object of the user entity
      * @return the saved user entity
      * @throws InstanceAlreadyExistsException will throw the exception if the users instance already exists
      */
     @PostMapping("/")
-    public ResponseEntity<User> saveUser(@Valid @RequestBody User user) {
+    public ResponseEntity<User> saveUser(@Valid @RequestBody User user) throws InstanceAlreadyExistsException {
         return new ResponseEntity<>(userService.saveUser(user), HttpStatus.CREATED);
     }
 
     /**
      * Gets all existing users (endpoint only accessible for admin role users)
+     *
      * @return a collection of all users
      */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -54,12 +57,13 @@ public class UserController {
      * sensitive info but nothing backend specific like roles. If the user looks up other users he will see public info
      * only like username and email. An admin role user can see absolutely all the info (including backend details like
      * roles)
+     *
      * @param username PathVariable used to find users by their name
      * @return User entity / modified DTO
      */
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_DEFAULT')")
     @GetMapping("/username/{username}")
-   public ResponseEntity<Object> findByUsername(@PathVariable String username) {
+    public ResponseEntity<Object> findByUsername(@PathVariable String username) {
         if (userSecurity.hasRole(userSecurity.getCurrentlyLoggedInUser(), "ROLE_ADMIN")) {
             return new ResponseEntity<>(userService.findByUsername(username), HttpStatus.OK);
         } else if (userSecurity.getCurrentlyLoggedInUser().getName().equals(username)) {
@@ -70,11 +74,12 @@ public class UserController {
                     userMapper.convertUserToPublicUserDTO(userService.findByUsername(username)), HttpStatus.OK);
         }
     }
-  
-  
-   /**
+
+
+    /**
      * Only admin role users can search users by their ID because this backend info is not available for the default
      * role users.
+     *
      * @param uuid id value from the url path
      * @return User entity (no DTO because an admin role user is allowed to see EVERYTHING)
      */
@@ -83,11 +88,12 @@ public class UserController {
     public ResponseEntity<User> findById(@PathVariable UUID uuid) {
         return new ResponseEntity<>(userService.findById(uuid), HttpStatus.OK);
     }
-  
-  
+
+
     /**
      * Only admin role users can add roles to users.
-     * @param uuid value from the url path
+     *
+     * @param uuid   value from the url path
      * @param roleId value from the url path
      * @return ResponseEntity based on dynamic behaviour of users interactions with the program
      */
@@ -100,6 +106,7 @@ public class UserController {
     /**
      * admin users can delete user accounts by username, which will delete the userprofile of the connected user automatically
      * because of the 1 to 1 relation with the userprofile.
+     *
      * @param username value from the url path
      * @return ResponseEntity which prints that a user (didn't) get deleted
      */
@@ -111,6 +118,7 @@ public class UserController {
     /**
      * admin users can delete user accounts by ID, which will delete the userprofile of the connected user automatically
      * because of the 1 to 1 relation with the userprofile.
+     *
      * @param uuid value from the url path
      * @return ResponseEntity which prints that a user (didn't) get deleted
      */

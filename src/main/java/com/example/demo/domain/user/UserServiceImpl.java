@@ -11,19 +11,20 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
 import javax.transaction.Transactional;
 import java.util.*;
 
-@Service @RequiredArgsConstructor @Transactional
+@Service
+@RequiredArgsConstructor
+@Transactional
 public class UserServiceImpl implements UserService, UserDetailsService {
     @Autowired
     private final UserRepository userRepository;
     @Autowired
     private final RoleRepository roleRepository;
-    @Autowired
-    private final PasswordEncoder passwordEncoder;
 
     @Override
 //    This method is used for security authentication, use caution when changing this
@@ -31,14 +32,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         User user = findByUsername(username);
 
-        if (user == null){
+        if (user == null) {
             throw new UsernameNotFoundException("User not found");
-        }
-        else {
+        } else {
 //          Construct a valid set of Authorities (needs to implement Granted Authorities)
             Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
             user.getRoles().forEach(role -> {
-                authorities.add(new SimpleGrantedAuthority("ROLE_"+role.getName()));
+                authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
                 role.getAuthorities().forEach(authority -> authorities.add(new SimpleGrantedAuthority(authority.getName())));
             });
 //            return a spring internal user object that contains authorities and roles
@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             Collection<Role> roles) {
         List<GrantedAuthority> authorities
                 = new ArrayList<>();
-        for (Role role: roles) {
+        for (Role role : roles) {
             authorities.add(new SimpleGrantedAuthority(role.getName()));
             role.getAuthorities().stream()
                     .map(authority -> new SimpleGrantedAuthority(authority.getName()))
@@ -60,8 +60,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User saveUser(User user) {
-        //user.setPassword(passwordEncoder.encode(user.getPassword()));
+    public User saveUser(User user) throws InstanceAlreadyExistsException {
+        if(userRepository.findByUsername(user.getUsername()) != null) {
+            throw new InstanceAlreadyExistsException("This user already exists.");
+        }
         return userRepository.save(user);
     }
 
@@ -82,7 +84,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User findByUsername(String username) {
-        if(userRepository.findByUsername(username) == null) {
+        if (userRepository.findByUsername(username) == null) {
             throw new NoSuchElementException("No user found with that username.");
         }
         return userRepository.findByUsername(username);

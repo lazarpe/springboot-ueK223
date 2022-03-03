@@ -8,6 +8,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
 import java.time.ZoneId;
@@ -22,7 +23,7 @@ public class ApiExceptionHandler {
     private static final HttpStatus NOT_FOUND = HttpStatus.NOT_FOUND;
     private static final HttpStatus INTERNAL_SERVER_ERROR = HttpStatus.INTERNAL_SERVER_ERROR;
     private static final HttpStatus UNAUTHORIZED = HttpStatus.UNAUTHORIZED;
-    private static final HttpStatus ACCEPTED = HttpStatus.ACCEPTED;
+    private static final HttpStatus CONFLICT = HttpStatus.CONFLICT;
 
     @ExceptionHandler(value = {NoSuchElementException.class, InstanceNotFoundException.class})
     public ResponseEntity<Object> handleNotFoundException(Exception e) {
@@ -37,7 +38,7 @@ public class ApiExceptionHandler {
     @ExceptionHandler(value = {NullPointerException.class, ArithmeticException.class, ClassCastException.class, IllegalStateException.class})
     public ResponseEntity<Object> handleRuntimeException(RuntimeException e) {
         ApiException apiException = new ApiException(
-                "Something went wrong... Sorry",
+                "Something went wrong on our side...  Try the action again.",
                 INTERNAL_SERVER_ERROR,
                 ZonedDateTime.now(ZoneId.of("Z"))
         );
@@ -65,13 +66,13 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(value = {InstanceAlreadyExistsException.class})
-    public ResponseEntity<Object> handleAcceptedException(RuntimeException e) {
+    public ResponseEntity<Object> handleConflictException(RuntimeException e) {
         ApiException apiException = new ApiException(
                 e.getMessage(),
-                ACCEPTED,
+                CONFLICT,
                 ZonedDateTime.now(ZoneId.of("Z"))
         );
-        return new ResponseEntity<>(apiException, ACCEPTED);
+        return new ResponseEntity<>(apiException, CONFLICT);
     }
 
     @ExceptionHandler(value = {RequestRejectedException.class})
