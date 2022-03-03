@@ -43,8 +43,9 @@ public class UserProfileController {
     }
 
     /**
-     *
-     * @param username
+     * Any user can see profiles of others. Admin role users can see all secret backend information and all the others
+     * are viewing a DTO of PublicUserProfileDTO
+     * @param username value from request path
      * @return
      */
     @Operation(summary="Endpoint for finding a specific user by username.")
