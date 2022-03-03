@@ -2,6 +2,7 @@ package com.example.demo.domain.user;
 import com.example.demo.domain.user.dto.PrivateUserDTO;
 import com.example.demo.domain.role.RoleService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,19 +12,24 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
+import javax.validation.Valid;
 import java.util.*;
 
 @RestController @RequestMapping("/api/user")
 @RequiredArgsConstructor
 public class UserController {
-//    ADD YOUR ENDPOINT MAPPINGS HERE
+
+    @Autowired
     private final UserService userService;
-    private final UserMapper userMapper;
+    @Autowired
     private final RoleService roleService;
 
+    private final UserMapper userMapper;
+
+
     @PostMapping("/")
-    public User saveUser(@RequestBody User user) throws InstanceAlreadyExistsException {
-        return userService.saveUser(user);
+    public ResponseEntity<User> saveUser(@Valid @RequestBody User user) {
+        return new ResponseEntity<>(userService.saveUser(user), HttpStatus.CREATED);
     }
 
     // andMatcher for this endpoint
@@ -39,43 +45,30 @@ public class UserController {
     @GetMapping("/username/{username}")
     public ResponseEntity<?> findByUsername(@PathVariable String username) throws InstanceNotFoundException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("ROLE: " + roleService.findByRoleName("ADMIN"));
         if (auth.getName().equals(username) || auth.getAuthorities().contains(roleService.findByRoleName("ADMIN"))) {
-            System.out.println("CRAZY NAME: " + auth.getName());
             return new ResponseEntity<>(userMapper.convertUserToPrivateUserDTO(userService.findByUsername(username)), HttpStatus.OK);
         } else {
-            System.out.println("NOT SO CRAZY NAME: " + auth.getName());
             return new ResponseEntity<>(userMapper.convertUserToPublicUserDTO(userService.findByUsername(username)), HttpStatus.OK);
         }
     }
 
-    @GetMapping("/id/{id}")
-    public ResponseEntity<Object> findById(@PathVariable UUID id) {
-        try {
-            return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
-        } catch (InstanceNotFoundException e) {
-            return new ResponseEntity<>("user not found", HttpStatus.NOT_FOUND);
-        }
+    @GetMapping("/id/{uuid}")
+    public ResponseEntity<User> findById(@PathVariable UUID uuid) {
+        return new ResponseEntity<>(userService.findById(uuid), HttpStatus.OK);
     }
 
-    @PutMapping("/id/{id}/role/id/{roleId}")
-    public ResponseEntity<Object> addRoleById(@PathVariable UUID id, @PathVariable UUID roleId) {
-        try {
-            return new ResponseEntity<>(userService.addRoleById(id, roleId), HttpStatus.OK);
-        } catch (InstanceNotFoundException e) {
-            return new ResponseEntity<>("user or role not found", HttpStatus.NOT_FOUND);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>("user or role is null", HttpStatus.NOT_FOUND);
-        }
+    @PutMapping("/id/{uuid}/role/id/{roleId}")
+    public ResponseEntity<Object> addRoleById(@PathVariable UUID uuid, @PathVariable UUID roleId) throws InstanceNotFoundException {
+        return new ResponseEntity<>(userService.addRoleById(uuid, roleId), HttpStatus.OK);
     }
 
-    @DeleteMapping("/id/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable UUID id) {
-        try {
-            userService.deleteById(id);
-            return new ResponseEntity<>("user deleted", HttpStatus.OK);
-        } catch (EmptyResultDataAccessException e) {
-            return new ResponseEntity<>("user is null", HttpStatus.NOT_FOUND);
-        }
+    @DeleteMapping("/id/{uuid}")
+    public ResponseEntity<String> deleteById(@PathVariable UUID uuid) {
+        return new ResponseEntity<>(userService.deleteById(uuid), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/username/{username}")
+    public ResponseEntity<String> deleteByUsername(@PathVariable String username) {
+        return new ResponseEntity<>(userService.deleteByUsername(username), HttpStatus.OK);
     }
 }

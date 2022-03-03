@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 //    This method is used for security authentication, use caution when changing this
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User user = userRepository.findByUsername(username);
+        User user = findByUsername(username);
 
         if (user == null){
             throw new UsernameNotFoundException("User not found");
@@ -57,43 +57,35 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User saveUser(User user) throws InstanceAlreadyExistsException{
-        if (userRepository.findByUsername(user.getUsername()) != null){
-            throw new InstanceAlreadyExistsException("User already exists");
-        }
-        else {
-            return userRepository.save(user);
-        }
+    public User saveUser(User user) {
+        return userRepository.save(user);
     }
 
     @Override
-    public User addRoleById(UUID id, UUID roleId) throws InstanceNotFoundException {
-        if (findById(id).isEmpty()) {
-            throw new NoSuchElementException("User is null");
-        }
+    public User addRoleById(UUID uuid, UUID roleId) throws InstanceNotFoundException {
         if (!roleRepository.existsById(roleId)) {
             throw new InstanceNotFoundException("Role not found");
         }
         if (roleRepository.findById(roleId).isEmpty()) {
             throw new NoSuchElementException("Role is null");
         }
-        User user = findById(id).get();
+        User user = findById(uuid);
         Set<Role> roles = user.getRoles();
         roles.add(roleRepository.findById(roleId).get());
         return user;
     }
 
     @Override
-    public User findByUsername(String username) { return userRepository.findByUsername(username); }
+    public User findByUsername(String username) {
+        if(userRepository.findByUsername(username) == null) {
+            throw new NoSuchElementException("No user found with that username.");
+        }
+        return userRepository.findByUsername(username);
+    }
 
     @Override
-    public Optional<User> findById(UUID id) throws InstanceNotFoundException {
-        if (userRepository.existsById(id)) {
-            return userRepository.findById(id);
-        }
-        else {
-            throw new InstanceNotFoundException("User not found");
-        }
+    public User findById(UUID uuid) {
+        return userRepository.findById(uuid).orElseThrow();
     }
 
     @Override
@@ -102,9 +94,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void deleteById(UUID id) {
-        userRepository.deleteById(id);
+    public String deleteById(UUID uuid) {
+        User foundUser = findById(uuid);
+        userRepository.deleteById(foundUser.getId());
+        return foundUser.getUsername() + " successfully deleted";
     }
 
+    @Override
+    public String deleteByUsername(String username) {
+        User foundUser = findByUsername(username);
+        userRepository.deleteById(foundUser.getId());
+        return foundUser.getUsername() + " successfully deleted";
+    }
 
 }
