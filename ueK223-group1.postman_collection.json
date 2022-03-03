@@ -1,0 +1,1535 @@
+{
+	"info": {
+		"_postman_id": "05ee14ed-ed62-4747-995a-5a605072a966",
+		"name": "ueK223",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "root",
+			"item": [
+				{
+					"name": "testRoot",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}",
+							"host": [
+								"{{BASE_URL}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "roles",
+			"item": [
+				{
+					"name": "findByName",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// required for following request: users/addRoleById\r",
+									"pm.test(\"collection variable ADMIN_ROLE_ID was set (is not null)\", function () {\r",
+									"    var jsonData = JSON.parse(responseBody);\r",
+									"    pm.collectionVariables.set(\"ADMIN_ROLE_ID\", jsonData.id);\r",
+									"    pm.expect(pm.collectionVariables.get(\"ADMIN_ROLE_ID\") != null).to.equal(true);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/role/search/{{ROLE_NAME}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"role",
+								"search",
+								"{{ROLE_NAME}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"// this must run before users"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "authorities",
+			"item": [
+				{
+					"name": "save",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"// required for following request: authorities/deleteById-no-references\r",
+									"pm.test(\"collection variable DEL_AUTHORITY_ID was set (is not null)\", function () {\r",
+									"    var jsonData = JSON.parse(responseBody);\r",
+									"    pm.collectionVariables.set(\"DEL_AUTHORITY_ID\", jsonData.id);\r",
+									"    pm.expect(pm.collectionVariables.get(\"DEL_AUTHORITY_ID\") != null).to.equal(true);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/authority/name/{{POST_AUTHORITY_NAME}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"authority",
+								"name",
+								"{{POST_AUTHORITY_NAME}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "save-409",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 409\", function () {\r",
+									"    pm.response.to.have.status(409);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matches \\\"authority ... already exists\\\"\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\r",
+									"        \"authority \\\"\" +\r",
+									"        pm.collectionVariables.get(\"AUTHORITY_NAME\") +\r",
+									"        \"\\\" already exists\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/authority/name/{{AUTHORITY_NAME}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"authority",
+								"name",
+								"{{AUTHORITY_NAME}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findAll",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/authority",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"authority"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findByName",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// get id of authority for following request: authorities/findById, authorities/deleteById-with-references\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"AUTHORITY_ID\", jsonData.id);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/authority/name/{{AUTHORITY_NAME}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"authority",
+								"name",
+								"{{AUTHORITY_NAME}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findByName-404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matches \\\"authority is null\\\"\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"authority is null\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/authority/name/{{NON_EXISTENT_AUTHORITY_NAME}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"authority",
+								"name",
+								"{{NON_EXISTENT_AUTHORITY_NAME}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findById",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// AUTHORITY_NAME will be set to a value by previous request: authorities/findByName\r",
+									"pm.test(\"collection variable AUTHORITY_NAME is not null\", function () {\r",
+									"    pm.expect(pm.collectionVariables.get(\"AUTHORITY_NAME\") != null).to.equal(true);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/authority/id/{{AUTHORITY_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"authority",
+								"id",
+								"{{AUTHORITY_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findById-404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matches \\\"authority not found\\\"\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"authority not found\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/authority/id/{{NON_EXISTENT_UUID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"authority",
+								"id",
+								"{{NON_EXISTENT_UUID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateNameByName",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/authority/name/{{POST_AUTHORITY_NAME}}/{{PUT_AUTHORITY_NAME}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"authority",
+								"name",
+								"{{POST_AUTHORITY_NAME}}",
+								"{{PUT_AUTHORITY_NAME}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateNameByName-404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matches string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"authority not found\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/authority/name/{{NON_EXISTENT_AUTHORITY_NAME}}/{{PUT_AUTHORITY_NAME}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"authority",
+								"name",
+								"{{NON_EXISTENT_AUTHORITY_NAME}}",
+								"{{PUT_AUTHORITY_NAME}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateNameByName-409",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 409\", function () {\r",
+									"    pm.response.to.have.status(409);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matches string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\r",
+									"        \"authority \\\"\" +\r",
+									"        pm.collectionVariables.get(\"AUTHORITY_NAME_2\") +\r",
+									"        \"\\\" already exists\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/authority/name/{{AUTHORITY_NAME}}/{{AUTHORITY_NAME_2}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"authority",
+								"name",
+								"{{AUTHORITY_NAME}}",
+								"{{AUTHORITY_NAME_2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteById-no-references",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// DEL_AUTHORITY_ID will be set to a value by previous request: authorities/findByName\r",
+									"pm.test(\"collection variable DEL_AUTHORITY_ID is not null\", function () {\r",
+									"    pm.expect(pm.collectionVariables.get(\"DEL_AUTHORITY_ID\") != null).to.equal(true);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/authority/id/{{DEL_AUTHORITY_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"authority",
+								"id",
+								"{{DEL_AUTHORITY_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteById-with-references",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matches \\\"authority deleted successfully\\\"\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"authority deleted successfully\");\r",
+									"});\r",
+									"\r",
+									"// DEL_AUTHORITY_ID will be set to a value by previous request: authorities/findByName\r",
+									"pm.test(\"collection variable DEL_AUTHORITY_ID is not null\", function () {\r",
+									"    pm.expect(pm.collectionVariables.get(\"DEL_AUTHORITY_ID\") != null).to.equal(true);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// AUTHORITY_ID will be set to a value by previous request: authorities/findByName\r",
+									"pm.test(\"collection variable AUTHORITY_ID is not null\", function () {\r",
+									"    pm.expect(pm.collectionVariables.get(\"AUTHORITY_ID\") != null).to.equal(true);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/authority/id/{{AUTHORITY_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"authority",
+								"id",
+								"{{AUTHORITY_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteById-404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/authority/id/{{NON_EXISTENT_UUID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"authority",
+								"id",
+								"{{NON_EXISTENT_UUID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "findAll",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/user",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findByUsername",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"\r",
+									"// required for following request: users/findById\r",
+									"pm.test(\"collection variable USER_ID was set (is not null)\", function () {\r",
+									"    pm.collectionVariables.set(\"USER_ID\", jsonData.id);\r",
+									"    pm.expect(pm.collectionVariables.get(\"USER_ID\") != null).to.equal(true);\r",
+									"});\r",
+									"\r",
+									"// required for following request: users/save\r",
+									"pm.test(\"collection variable POST_USER_ROLES was set (is not null)\", function () {\r",
+									"    pm.collectionVariables.set(\"POST_USER_ROLES\", JSON.stringify(jsonData.roles));\r",
+									"});\r",
+									"\r",
+									"// required for following request: users/save-409\r",
+									"pm.test(\"collection variable ALREADY_EXISTING_USER was set (is not null)\", function () {\r",
+									"    pm.collectionVariables.set(\"ALREADY_EXISTING_USER\", responseBody);\r",
+									"    pm.expect(pm.collectionVariables.get(\"ALREADY_EXISTING_USER\") != null).to.equal(true);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/user/username/{{USERNAME}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"user",
+								"username",
+								"{{USERNAME}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findByUsername-404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matches \\\"no user found\\\"\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"No user found\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/user/username/{{NON_EXISTENT_USERNAME}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"user",
+								"username",
+								"{{NON_EXISTENT_USERNAME}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findById",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// USER_ID will be set to a value by previous request: users/findByUsername\r",
+									"pm.test(\"collection variable USER_ID is not null\", function () {\r",
+									"    pm.expect(pm.collectionVariables.get(\"USER_ID\") != null).to.equal(true);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/user/id/{{USER_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"user",
+								"id",
+								"{{USER_ID}}"
+							]
+						},
+						"description": "needs the collection variable `USER_ID` to be set to an existing id automatically by`findByUsername`or manually"
+					},
+					"response": []
+				},
+				{
+					"name": "findById-404",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matches \\\"No value present\\\"\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"No value present\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/user/id/{{NON_EXISTENT_UUID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"user",
+								"id",
+								"{{NON_EXISTENT_UUID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addRoleById",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// USER_ID will be set to a value by a previous request: users/findByUsername\r",
+									"pm.test(\"collection variable USER_ID is not null\", function () {\r",
+									"    pm.expect(pm.collectionVariables.get(\"USER_ID\") != null).to.equal(true);\r",
+									"});\r",
+									"\r",
+									"// ADMIN_ROLE_ID will be set to a value by a previous request: roles/findByName\r",
+									"pm.test(\"collection variable ADMIN_ROLE_ID is not null\", function () {\r",
+									"    pm.expect(pm.collectionVariables.get(\"ADMIN_ROLE_ID\") != null).to.equal(true);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/user/id/{{USER_ID}}/role/id/{{ADMIN_ROLE_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"user",
+								"id",
+								"{{USER_ID}}",
+								"role",
+								"id",
+								"{{ADMIN_ROLE_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addRoleById-user-404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matches \\\"Role not found\\\"\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"No value present\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/user/id/{{NON_EXISTENT_UUID}}/role/id/{{NON_EXISTENT_UUID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"user",
+								"id",
+								"{{NON_EXISTENT_UUID}}",
+								"role",
+								"id",
+								"{{NON_EXISTENT_UUID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addRoleById-role-404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matches \\\"Role not found\\\"\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Role not found\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/user/id/{{USER_ID}}/role/id/{{NON_EXISTENT_UUID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"user",
+								"id",
+								"{{USER_ID}}",
+								"role",
+								"id",
+								"{{NON_EXISTENT_UUID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "save",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"// required for following request: users/deleteById\r",
+									"pm.test(\"collection variable DEL_USER_ID was set (is not null)\", function () {\r",
+									"    var jsonData = JSON.parse(responseBody);\r",
+									"    pm.collectionVariables.set(\"DEL_USER_ID\", jsonData.id);\r",
+									"    pm.expect(pm.collectionVariables.get(\"DEL_USER_ID\") != null).to.equal(true);\r",
+									"});\r",
+									"\r",
+									"console.log(pm.request.body);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// will fail if executed twice and the previous user not deleted\r",
+									"\r",
+									"// set by a previous request: users/findByUsername\r",
+									"pm.test(\"collection variable POST_USER_ROLES is not null\", function () {\r",
+									"    pm.expect(pm.collectionVariables.get(\"POST_USER_ROLES\") != null).to.equal(true);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": null,\r\n    \"username\": \"{{POST_USER_USERNAME}}\",\r\n    \"email\": \"{{POST_USER_EMAIL}}\",\r\n    \"password\": \"{{POST_USER_PASSWORD}}\",\r\n    \"roles\": {{POST_USER_ROLES}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/user/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "save-409",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 409\", function () {\r",
+									"    pm.response.to.have.status(409);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matches \\\"user already exists\\\"\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"user already exists\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{ALREADY_EXISTING_USER}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/user/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteById-no-references",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// DEL_USER_ID will be set to a value by a previous request: users/save\r",
+									"pm.test(\"collection variable DEL_USER_ID is not null\", function () {\r",
+									"    pm.expect(pm.collectionVariables.get(\"DEL_USER_ID\") != null).to.equal(true);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matches \\\"successfully deleted\\\"\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"successfully deleted\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/user/id/{{DEL_USER_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"user",
+								"id",
+								"{{DEL_USER_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteById-with-references",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// USER_ID will be set to a value by a previous request: users/findByUsername\r",
+									"pm.test(\"collection variable USER_ID is not null\", function () {\r",
+									"    pm.expect(pm.collectionVariables.get(\"USER_ID\") != null).to.equal(true);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matches \\\"successfully deleted\\\"\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"successfully deleted\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/user/id/{{USER_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"user",
+								"id",
+								"{{USER_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteById-404",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matches \\\"No value present\\\"\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"No value present\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/user/id/{{NON_EXISTENT_UUID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"user",
+								"id",
+								"{{NON_EXISTENT_UUID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"// must run after roles"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "userprofile",
+			"item": [
+				{
+					"name": "findAllUserProfilesWithPagination",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/profile/0/4",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"profile",
+								"0",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findAllUserProfiles",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/profile/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"profile",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findByUsername",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/profile/boss",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"profile",
+								"boss"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "bosspw",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "boss",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"/**",
+					" * you should be able to run this whole",
+					" * collection, except for 4 tests related to",
+					" * deleting something and a constraint preventing",
+					" * it. (500 - internal server error)",
+					" * ",
+					" * if something breaks anyways, try to reset all",
+					" * collection variables.",
+					" */"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": "localhost:8080/api",
+			"type": "string"
+		},
+		{
+			"key": "USER_ID",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "USERNAME",
+			"value": "james",
+			"type": "string"
+		},
+		{
+			"key": "POST_USER_USERNAME",
+			"value": "tony",
+			"type": "string"
+		},
+		{
+			"key": "POST_USER_EMAIL",
+			"value": "tony.stark@gmail.com",
+			"type": "string"
+		},
+		{
+			"key": "POST_USER_PASSWORD",
+			"value": "stark",
+			"type": "string"
+		},
+		{
+			"key": "DEL_USER_ID",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "ADMIN_ROLE_ID",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "AUTHORITY_ID",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "AUTHORITY_NAME",
+			"value": "CREATE",
+			"type": "string"
+		},
+		{
+			"key": "AUTHORITY_NAME_2",
+			"value": "READ",
+			"type": "string"
+		},
+		{
+			"key": "POST_AUTHORITY_NAME",
+			"value": "HELLO",
+			"type": "string"
+		},
+		{
+			"key": "PUT_AUTHORITY_NAME",
+			"value": "WORLD",
+			"type": "string"
+		},
+		{
+			"key": "DEL_AUTHORITY_ID",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "NON_EXISTENT_USERNAME",
+			"value": "doesntexist",
+			"type": "string"
+		},
+		{
+			"key": "NON_EXISTENT_UUID",
+			"value": "d0d67fe3-990b-443f-9c9d-8ea16d0c4e61",
+			"type": "string"
+		},
+		{
+			"key": "NON_EXISTENT_AUTHORITY_NAME",
+			"value": "TEST",
+			"type": "string"
+		},
+		{
+			"key": "ALREADY_EXISTING_USER",
+			"value": ""
+		},
+		{
+			"key": "ROLE_NAME",
+			"value": "ADMIN",
+			"type": "string"
+		},
+		{
+			"key": "POST_USER_ROLES",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
