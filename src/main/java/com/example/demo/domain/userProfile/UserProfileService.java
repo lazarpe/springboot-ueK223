@@ -6,10 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-/**
- * Created by lazar on 2/23/2022.
- * Project name: demo
- **/
 public interface UserProfileService {
 
     UserProfile saveUserProfile(UserProfile userProfile) throws InstanceAlreadyExistsException;
@@ -19,6 +15,8 @@ public interface UserProfileService {
     void updateUserProfile(UserProfile userProfile, String username);
 
     void deleteById(String username) throws InstanceNotFoundException;
+
+    List<UserProfile> findAllWithPagination(Integer page, Integer valuesPerPage);
 
     List<UserProfile> findAll();
 }

@@ -37,6 +37,13 @@ public class UserProfileController {
         return new ResponseEntity<>(userProfileService.getUserProfile(username), HttpStatus.OK);
     }
 
+    @Operation(summary="Endpoint for only administrators, which displays all user profiles with pagination and sorting by username.")
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/{page}/{valuesPerPage}")
+    public ResponseEntity<Collection<UserProfile>> findAllUserProfilesPagination(@PathVariable Integer page, @PathVariable Integer valuesPerPage) {
+        return new ResponseEntity<>(userProfileService.findAllWithPagination(page, valuesPerPage), HttpStatus.OK);
+    }
+
     @Operation(summary="Endpoint for only administrators, which displays all user profiles.")
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/")
