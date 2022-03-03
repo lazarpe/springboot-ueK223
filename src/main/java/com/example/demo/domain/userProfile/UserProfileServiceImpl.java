@@ -5,6 +5,9 @@ import com.example.demo.domain.user.UserRepository;
 import com.example.demo.domain.user.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
@@ -57,7 +60,6 @@ public class UserProfileServiceImpl implements UserProfileService {
             });
     }
 
-
     /**
      *
      * @param username
@@ -68,7 +70,6 @@ public class UserProfileServiceImpl implements UserProfileService {
         User foundUser = userService.findByUsername(username);
         userProfileRepository.deleteById(userProfileRepository.findByUserId(foundUser.getId()).get().getId());
     }
-
 
     //Currently can only get user profile through it's ID and not through user
     /**
@@ -82,6 +83,11 @@ public class UserProfileServiceImpl implements UserProfileService {
         return userProfileRepository.findByUserId(foundUser.getId());
     }
 
+    @Override
+    public List<UserProfile> findAllWithPagination(Integer page,Integer valuesPerPage) {
+        Pageable sortedByName = PageRequest.of(page, valuesPerPage, Sort.by("user.username").ascending());
+        return userProfileRepository.findAll(sortedByName).getContent();
+    }
 
     @Override
     public List<UserProfile> findAll() {
