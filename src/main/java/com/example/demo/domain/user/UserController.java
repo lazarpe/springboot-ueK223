@@ -37,7 +37,7 @@ public class UserController {
      * @return the saved user entity
      * @throws InstanceAlreadyExistsException will throw the exception if the users instance already exists
      */
-    @Operation(summary = "")
+    @Operation(summary = "Endpoint for creating user in the database. It takes a user object in the response body as a parameter.")
     @PostMapping("/")
     public ResponseEntity<User> saveUser(@Valid @RequestBody User user) throws InstanceAlreadyExistsException {
         return new ResponseEntity<>(userService.saveUser(user), HttpStatus.CREATED);
@@ -48,7 +48,7 @@ public class UserController {
      *
      * @return a collection of all users
      */
-    @Operation(summary = "")
+    @Operation(summary = "Endpoint for retrieving all users in the database. This endpoint is only accessible for administrators.")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("")
     public ResponseEntity<Collection<User>> findAll() {
@@ -64,7 +64,7 @@ public class UserController {
      * @param username PathVariable used to find users by their name
      * @return User entity / modified DTO
      */
-    @Operation(summary = "")
+    @Operation(summary = "Endpoint for retrieving a user by username. Takes the users username as a  parameter.")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_DEFAULT')")
     @GetMapping("/username/{username}")
     public ResponseEntity<Object> findByUsername(@PathVariable String username) {
@@ -87,7 +87,7 @@ public class UserController {
      * @param uuid id value from the url path
      * @return User entity (no DTO because an admin role user is allowed to see EVERYTHING)
      */
-    @Operation(summary = "")
+    @Operation(summary = "Endpoint for retrieving a user by UUID. This endpoint is only accessible for administrators. Takes the users UUID as a parameter.")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/id/{uuid}")
     public ResponseEntity<User> findById(@PathVariable UUID uuid) {
@@ -100,10 +100,10 @@ public class UserController {
      *
      * @param uuid   value from the url path
      * @param roleId value from the url path
-     * @throws InstanceNotFoundException
      * @return ResponseEntity based on dynamic behaviour of users interactions with the program
+     * @throws InstanceNotFoundException
      */
-    @Operation(summary = "")
+    @Operation(summary = "Endpoint for updating a users roles. Takes the users UUID and a specified role UUID parameters.")
     @PutMapping("/id/{uuid}/role/id/{roleId}")
     public ResponseEntity<Object> addRoleById(@PathVariable UUID uuid, @PathVariable UUID roleId) throws InstanceNotFoundException {
         return new ResponseEntity<>(userService.addRoleById(uuid, roleId), HttpStatus.OK);
@@ -117,7 +117,7 @@ public class UserController {
      * @param username value from the url path
      * @return ResponseEntity which prints that a user (didn't) get deleted
      */
-    @Operation(summary = "")
+    @Operation(summary = "Endpoint for deleting users based on a given username. Takes the username as a parameter.")
     @DeleteMapping("/username/{username}")
     public ResponseEntity<String> deleteByUsername(@PathVariable String username) {
         return new ResponseEntity<>(userService.deleteByUsername(username), HttpStatus.OK);
@@ -130,7 +130,7 @@ public class UserController {
      * @param uuid value from the url path
      * @return ResponseEntity which prints that a user (didn't) get deleted
      */
-    @Operation(summary = "")
+    @Operation(summary = "Endpoint for deleting users based on a given UUID. Only accessible for administrators. Takes a UUID as a parameter")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/id/{uuid}")
     public ResponseEntity<String> deleteById(@PathVariable UUID uuid) {

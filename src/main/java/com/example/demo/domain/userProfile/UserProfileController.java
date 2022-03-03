@@ -2,7 +2,6 @@ package com.example.demo.domain.userProfile;
 
 import com.example.demo.domain.security.UserSecurity;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +33,7 @@ public class UserProfileController {
     }
 
     /**
-     * delete userprofile by it's username (everyone with an account owning the default role)
+     * Delete userprofile by it's username (everyone with an account owning the default role)
      *
      * @param username variable from url path of request
      */
