@@ -64,7 +64,7 @@ public class RoleController {
      * was successful or not.
      * @throws InstanceAlreadyExistsException
      */
-    @PostMapping("/name/{}")
+    @PostMapping("/")
     public ResponseEntity<String> saveRole(@RequestBody Role role) throws InstanceAlreadyExistsException {
         return new ResponseEntity<>(roleService.saveRole(role), HttpStatus.OK);
     }
