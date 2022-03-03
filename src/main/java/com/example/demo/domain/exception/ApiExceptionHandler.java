@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
+import javax.management.OperationsException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.NoSuchElementException;
@@ -66,7 +67,7 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(value = {InstanceAlreadyExistsException.class})
-    public ResponseEntity<Object> handleConflictException(RuntimeException e) {
+    public ResponseEntity<Object> handleConflictException(OperationsException e) {
         ApiException apiException = new ApiException(
                 e.getMessage(),
                 CONFLICT,

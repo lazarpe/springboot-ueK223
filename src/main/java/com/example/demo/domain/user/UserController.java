@@ -2,6 +2,7 @@ package com.example.demo.domain.user;
 
 import com.example.demo.domain.role.RoleService;
 import com.example.demo.domain.security.UserSecurity;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,6 +37,7 @@ public class UserController {
      * @return the saved user entity
      * @throws InstanceAlreadyExistsException will throw the exception if the users instance already exists
      */
+    @Operation(summary = "")
     @PostMapping("/")
     public ResponseEntity<User> saveUser(@Valid @RequestBody User user) throws InstanceAlreadyExistsException {
         return new ResponseEntity<>(userService.saveUser(user), HttpStatus.CREATED);
@@ -46,6 +48,7 @@ public class UserController {
      *
      * @return a collection of all users
      */
+    @Operation(summary = "")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("")
     public ResponseEntity<Collection<User>> findAll() {
@@ -61,6 +64,7 @@ public class UserController {
      * @param username PathVariable used to find users by their name
      * @return User entity / modified DTO
      */
+    @Operation(summary = "")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_DEFAULT')")
     @GetMapping("/username/{username}")
     public ResponseEntity<Object> findByUsername(@PathVariable String username) {
@@ -83,6 +87,7 @@ public class UserController {
      * @param uuid id value from the url path
      * @return User entity (no DTO because an admin role user is allowed to see EVERYTHING)
      */
+    @Operation(summary = "")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/id/{uuid}")
     public ResponseEntity<User> findById(@PathVariable UUID uuid) {
@@ -95,8 +100,10 @@ public class UserController {
      *
      * @param uuid   value from the url path
      * @param roleId value from the url path
+     * @throws InstanceNotFoundException
      * @return ResponseEntity based on dynamic behaviour of users interactions with the program
      */
+    @Operation(summary = "")
     @PutMapping("/id/{uuid}/role/id/{roleId}")
     public ResponseEntity<Object> addRoleById(@PathVariable UUID uuid, @PathVariable UUID roleId) throws InstanceNotFoundException {
         return new ResponseEntity<>(userService.addRoleById(uuid, roleId), HttpStatus.OK);
@@ -110,6 +117,7 @@ public class UserController {
      * @param username value from the url path
      * @return ResponseEntity which prints that a user (didn't) get deleted
      */
+    @Operation(summary = "")
     @DeleteMapping("/username/{username}")
     public ResponseEntity<String> deleteByUsername(@PathVariable String username) {
         return new ResponseEntity<>(userService.deleteByUsername(username), HttpStatus.OK);
@@ -122,6 +130,7 @@ public class UserController {
      * @param uuid value from the url path
      * @return ResponseEntity which prints that a user (didn't) get deleted
      */
+    @Operation(summary = "")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/id/{uuid}")
     public ResponseEntity<String> deleteById(@PathVariable UUID uuid) {
