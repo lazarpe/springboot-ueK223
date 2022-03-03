@@ -8,7 +8,8 @@
       - Password: postgres
 
 ---
-
+Final product can be found in the dev-branch, ready for deployment.
+---
 ### Application setup
 After the Container is running with the DB you can start the spring application and you should be
 able to log in with either a...
@@ -24,5 +25,6 @@ In our AppStartupRunner we have created two roles, two users and a few authoriti
 - ROLE_DEFAULT
     -  CRUD for himself
     - every user can lookup other users, but will get public info only (Extra feature :D)
+
 
 
